@@ -15,4 +15,9 @@ app.use(cors());
 // parse json body request
 app.use(express.json());
 
+// routers
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "success" });
+});
+
 module.exports = app;
