@@ -268,6 +268,10 @@ const projectSchema = new mongoose.Schema({
   footer: {
     type: footerSchema,
   },
+  url: {
+    type: String,
+    required: true,
+  },
 });
 
 const Project = new mongoose.model("Project", projectSchema);
