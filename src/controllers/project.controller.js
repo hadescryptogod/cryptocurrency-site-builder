@@ -49,9 +49,26 @@ exports.getProjectBySlug = async (req, res, next) => {
 };
 
 // function to update project by slug ex. abc-coin
-exports.updateProjectBySlug = (req, res, next) => {
-  const project = {};
-  res.status(200).json({
-    project: project,
-  });
+exports.updateProjectBySlug = async (req, res, next) => {
+  try {
+    // update project by slug
+    const project = await Project.findOneAndUpdate(
+      { slug: req.params.slug },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    // check if project exists
+    if (!project)
+      return res.status(404).json({ message: "Project not found." });
+
+    res.status(200).json({
+      project: project,
+    });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
 };
