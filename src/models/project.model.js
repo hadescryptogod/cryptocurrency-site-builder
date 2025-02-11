@@ -40,6 +40,29 @@ const headerSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
+  linkColorDesktop: {
+    type: String,
+    default: "#000000",
+  },
+  linkColorMobile: {
+    type: String,
+    default: "#FFFFFF",
+  },
+  backgroundType: {
+    type: String,
+    enum: ["image", "video", "hex"],
+    required: true,
+    default: "hex",
+  },
+  backgroundContent: {
+    type: String,
+    required: true,
+    default: "#000000",
+  },
 });
 
 // hero
@@ -49,12 +72,28 @@ const heroSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  headlineColor: {
+    type: String,
+    default: "#000000",
+  },
   shortDescription: {
     type: String,
     required: true,
   },
+  shortDescriptionColor: {
+    type: String,
+    defualt: "#000000",
+  },
   links: {
     type: [linkSchema],
+  },
+  linkColor: {
+    type: String,
+    default: "#FFFFFF",
+  },
+  linkBackgroundColor: {
+    type: String,
+    default: "#000000",
   },
   visualType: {
     type: String,
@@ -83,8 +122,15 @@ const featureSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   description: {
     type: String,
+  },
+  descriptionColor: {
+    type: "#000000",
   },
   visualType: {
     type: String,
@@ -105,9 +151,17 @@ const aboutSchema = new mongoose.Schema({
     default: "About",
     required: true,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   description: {
     type: String,
     required: true,
+  },
+  descriptionColor: {
+    type: String,
+    default: "#000000",
   },
   visualType: {
     type: String,
@@ -141,11 +195,23 @@ const feeSchema = new mongoose.Schema({
     min: 0,
     max: 100,
   },
+  percentageColor: {
+    type: String,
+    default: "#000000",
+  },
   title: {
     type: String,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   description: {
     type: String,
+  },
+  descriptionColor: {
+    type: String,
+    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -162,9 +228,17 @@ const tokenomicsSchema = new mongoose.Schema({
     default: "Tokenomics",
     required: true,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   description: {
     type: String,
     required: true,
+  },
+  descriptionColor: {
+    type: String,
+    default: "#000000",
   },
   fees: [
     {
@@ -199,6 +273,10 @@ const phaseSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   visualType: {
     type: String,
     enum: ["image", "video"],
@@ -207,6 +285,10 @@ const phaseSchema = new mongoose.Schema({
     type: String,
   },
   milestones: [{ type: milestoneSchema }],
+  milestoneColor: {
+    type: String,
+    default: "#000000",
+  },
 });
 
 const roadmapSchema = new mongoose.Schema({
@@ -215,11 +297,23 @@ const roadmapSchema = new mongoose.Schema({
     default: "Roadmap",
     required: true,
   },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
   description: {
     type: String,
     required: true,
   },
+  descriptionColor: {
+    type: String,
+    default: "#000000",
+  },
   phases: [{ type: phaseSchema }],
+  phaseColor: {
+    type: String,
+    default: "#000000",
+  },
   backgroundType: {
     type: String,
     enum: ["image", "video", "hex"],
@@ -241,8 +335,27 @@ const footerSchema = new mongoose.Schema({
       type: linkSchema,
     },
   ],
+  linkColor: {
+    type: String,
+    default: "#000000",
+  },
   disclaimer: {
     type: String,
+  },
+  disclaimerColor: {
+    type: String,
+    default: "#000000",
+  },
+  backgroundType: {
+    type: String,
+    enum: ["image", "video", "hex"],
+    required: true,
+    default: "hex",
+  },
+  backgroundContent: {
+    type: String,
+    required: true,
+    default: "#FFFFFF",
   },
 });
 
