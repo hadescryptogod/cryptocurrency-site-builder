@@ -234,7 +234,6 @@ const tokenomicsSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   descriptionColor: {
     type: String,
@@ -303,7 +302,6 @@ const roadmapSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   descriptionColor: {
     type: String,
@@ -311,6 +309,56 @@ const roadmapSchema = new mongoose.Schema({
   },
   phases: [{ type: phaseSchema }],
   phaseColor: {
+    type: String,
+    default: "#000000",
+  },
+  backgroundType: {
+    type: String,
+    enum: ["image", "video", "hex"],
+    required: true,
+    default: "hex",
+  },
+  backgroundContent: {
+    type: String,
+    required: true,
+    default: "#FFFFFF",
+  },
+});
+
+// FAQ
+
+const questionSchema = {
+  title: {
+    type: String,
+  },
+  answer: {
+    type: String,
+  },
+};
+
+const faqSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    default: "FAQ",
+    required: true,
+  },
+  titleColor: {
+    type: String,
+    default: "#000000",
+  },
+  description: {
+    type: String,
+  },
+  descriptionColor: {
+    type: String,
+    default: "#000000",
+  },
+  questions: { type: [questionSchema] },
+  questionColor: {
+    type: String,
+    default: "#000000",
+  },
+  questionBackgroundColor: {
     type: String,
     default: "#000000",
   },
@@ -385,6 +433,9 @@ const projectSchema = new mongoose.Schema({
   },
   roadmap: {
     type: roadmapSchema,
+  },
+  faq: {
+    type: faqSchema,
   },
   footer: {
     type: footerSchema,
