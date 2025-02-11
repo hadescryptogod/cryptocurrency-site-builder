@@ -19,4 +19,7 @@ router.get("/:slug", projectController.getProjectBySlug);
 // update project by slug
 router.patch("/:slug", projectController.updateProjectBySlug);
 
+// delete project by slug
+router.delete("/:slug", projectController.deleteProjectBySlug);
+
 module.exports = router;

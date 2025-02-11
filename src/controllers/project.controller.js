@@ -72,3 +72,6 @@ exports.updateProjectBySlug = async (req, res, next) => {
     res.status(500).json({ err });
   }
 };
+
+// function to delete project by slug ex. abc-coin
+exports.deleteProjectBySlug = async (req, res, next) => {};
