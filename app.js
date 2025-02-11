@@ -3,6 +3,9 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 
+// import router
+const projectRouter = require("./src/routers/project.routes");
+
 // init express
 const app = express();
 
@@ -16,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 
 // routers
+app.use(projectRouter);
+
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });
 });
