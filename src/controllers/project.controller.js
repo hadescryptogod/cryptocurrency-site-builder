@@ -30,11 +30,22 @@ exports.getAllProjects = async (req, res, next) => {
 };
 
 // function to get project by slug ex. abc-coin
-exports.getProjectBySlug = (req, res, next) => {
-  const project = {};
-  res.status(200).json({
-    project: project,
-  });
+exports.getProjectBySlug = async (req, res, next) => {
+  try {
+    // get project by slug
+    const project = await Project.find({ slug: req.params.slug })[0];
+
+    // check if project exists
+    if (!project)
+      return res.status(404).json({ message: "Project not found." });
+
+    // return res with project data
+    res.status(200).json({
+      project: project,
+    });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
 };
 
 // function to update project by slug ex. abc-coin
