@@ -360,6 +360,14 @@ const footerSchema = new mongoose.Schema({
 });
 
 const projectSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  slug: {
+    type: String,
+    unique: true,
+  },
   token: {
     type: tokenSchema,
   },
@@ -380,10 +388,6 @@ const projectSchema = new mongoose.Schema({
   },
   footer: {
     type: footerSchema,
-  },
-  url: {
-    type: String,
-    required: true,
   },
 });
 
