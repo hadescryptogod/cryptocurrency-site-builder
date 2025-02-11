@@ -33,7 +33,7 @@ exports.getAllProjects = async (req, res, next) => {
 exports.getProjectBySlug = async (req, res, next) => {
   try {
     // get project by slug
-    const project = await Project.find({ slug: req.params.slug })[0];
+    const project = await Project.findOne({ slug: req.params.slug });
 
     // check if project exists
     if (!project)
