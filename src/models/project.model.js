@@ -407,6 +407,8 @@ const footerSchema = new mongoose.Schema({
   },
 });
 
+// project
+
 const projectSchema = new mongoose.Schema({
   name: {
     type: String,
