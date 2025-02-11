@@ -392,7 +392,8 @@ const featureSchema = new mongoose.Schema({
     type: String,
   },
   descriptionColor: {
-    type: "#000000",
+    type: String,
+    default: "#000000",
   },
   visualType: {
     type: String,

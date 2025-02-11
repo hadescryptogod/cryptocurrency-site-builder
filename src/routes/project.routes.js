@@ -10,10 +10,13 @@ const router = express.Router();
 // create project
 router.post("/", projectController.createProject);
 
+// get all projects
+router.get("/", projectController.getAllProjects);
+
 // get project by slug ex. abc-coin-1
-router.get("/:slug", project.getProjectBySlug);
+router.get("/:slug", projectController.getProjectBySlug);
 
 // update project by slug
-router.patch("/:slug", project.updateProjectBySlug);
+router.patch("/:slug", projectController.updateProjectBySlug);
 
 module.exports = router;
