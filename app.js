@@ -3,8 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 
-// import router
-const projectRouter = require("./src/routers/project.routes");
+// import routes
+const projectRoutes = require("./src/routes/project.routes");
 
 // init express
 const app = express();
@@ -18,8 +18,8 @@ app.use(cors());
 // parse json body request
 app.use(express.json());
 
-// routers
-app.use(projectRouter);
+// routes
+app.use("/v1/projects", projectRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });
