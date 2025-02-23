@@ -46,16 +46,17 @@ const projectSample = {
     title: "About",
     titleColor: "#000000",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     descriptionColor: "#000000",
     visualType: "image",
     visualUrl: "assets/image-3.png",
+    longDescription:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    longDescriptionColor: "#000000",
     features: [
       {
         title: "Feature 1 Title",
-        titleColor: "#000000",
         description: "Feature 1 Description",
-        descriptionColor: "#000000",
         visualType: "image",
         visualUrl: "assets/feature-1.png",
         backgroundType: "hex",
@@ -63,9 +64,7 @@ const projectSample = {
       },
       {
         title: "Feature 2 Title",
-        titleColor: "#000000",
         description: "Feature 2 Description",
-        descriptionColor: "#000000",
         visualType: "image",
         visualUrl: "assets/feature-2.png",
         backgroundType: "hex",
@@ -73,9 +72,7 @@ const projectSample = {
       },
       {
         title: "Feature 3 Title",
-        titleColor: "#000000",
         description: "Feature 3 Description",
-        descriptionColor: "#000000",
         visualType: "image",
         visualUrl: "assets/feature-3.png",
         backgroundType: "hex",
@@ -83,15 +80,15 @@ const projectSample = {
       },
       {
         title: "Feature 4 Title",
-        titleColor: "#000000",
         description: "Feature 4 Description",
-        descriptionColor: "#000000",
         visualType: "image",
         visualUrl: "assets/feature-4.png",
         backgroundType: "hex",
         backgroundContent: "#FFFFFF",
       },
     ],
+    featuresTitleColor: "#000000",
+    featuresDescriptionColor: "#000000",
     backgroundType: "hex",
     backgroundContent: "#FFFFFF",
   },
@@ -384,16 +381,8 @@ const featureSchema = new mongoose.Schema({
   title: {
     type: String,
   },
-  titleColor: {
-    type: String,
-    default: "#000000",
-  },
   description: {
     type: String,
-  },
-  descriptionColor: {
-    type: String,
-    default: "#000000",
   },
   visualType: {
     type: String,
@@ -437,9 +426,26 @@ const aboutSchema = new mongoose.Schema({
   visualUrl: {
     type: String,
   },
+  longDescription: {
+    type: String,
+    required: true,
+  },
+  longDescriptionColor: {
+    type: String,
+    default: "#000000",
+  },
   features: {
     type: [featureSchema],
   },
+  featuresTitleColor: {
+    type: String,
+    default: "#000000",
+  },
+  featuresDescriptionColor: {
+    type: String,
+    default: "#000000",
+  },
+
   backgroundType: {
     type: String,
     enum: ["image", "video", "hex"],
@@ -550,10 +556,6 @@ const phaseSchema = new mongoose.Schema({
     type: String,
   },
   milestones: [{ type: milestoneSchema }],
-  milestoneColor: {
-    type: String,
-    default: "#000000",
-  },
 });
 
 const roadmapSchema = new mongoose.Schema({
@@ -574,7 +576,11 @@ const roadmapSchema = new mongoose.Schema({
     default: "#000000",
   },
   phases: [{ type: phaseSchema }],
-  phaseColor: {
+  phaseTitleColor: {
+    type: String,
+    default: "#000000",
+  },
+  milestoneTitleColor: {
     type: String,
     default: "#000000",
   },
