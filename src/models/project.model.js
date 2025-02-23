@@ -101,27 +101,24 @@ const projectSample = {
     fees: [
       {
         percentage: 6,
-        percentageColor: "#000000",
         title: "Marketing",
-        titleColor: "#000000",
         description:
           "6% of every transaction is taken and will be used for enhancements, operations, and marketing of the project.",
-        descriptionColor: "#000000",
         backgroundType: "hex",
         backgroundContent: "#FFFFFF",
       },
       {
         percentage: 6,
-        percentageColor: "#000000",
         title: "Liquidity",
-        titleColor: "#000000",
         description:
           "1% of every transaction is transformed into liquidity. It's automatic and helps create a price floor.",
-        descriptionColor: "#000000",
         backgroundType: "hex",
         backgroundContent: "#FFFFFF",
       },
     ],
+    feesPercentageColor: "#000000",
+    feesTitleColor: "#000000",
+    feesDescriptionColor: "#000000",
     backgroundType: "hex",
     backgroundContent: "#FFFFFF",
   },
@@ -467,23 +464,11 @@ const feeSchema = new mongoose.Schema({
     min: 0,
     max: 100,
   },
-  percentageColor: {
-    type: String,
-    default: "#000000",
-  },
   title: {
     type: String,
   },
-  titleColor: {
-    type: String,
-    default: "#000000",
-  },
   description: {
     type: String,
-  },
-  descriptionColor: {
-    type: String,
-    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -516,6 +501,18 @@ const tokenomicsSchema = new mongoose.Schema({
       type: feeSchema,
     },
   ],
+  feePercentageColor: {
+    type: String,
+    default: "#000000",
+  },
+  feeTitleColor: {
+    type: String,
+    default: "#000000",
+  },
+  feeDescriptionColor: {
+    type: String,
+    default: "#000000",
+  },
   backgroundType: {
     type: String,
     enum: ["image", "video", "hex"],
