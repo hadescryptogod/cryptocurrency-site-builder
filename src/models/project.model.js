@@ -131,7 +131,6 @@ const projectSample = {
     phases: [
       {
         title: "Phase 1",
-        titleColor: "#000000",
         visualType: "image",
         visualUrl: "assets/image-4.png",
         milestones: [
@@ -156,11 +155,9 @@ const projectSample = {
             checked: false,
           },
         ],
-        milestoneColor: "#000000",
       },
       {
         title: "Phase 2",
-        titleColor: "#000000",
         visualType: "image",
         visualUrl: "assets/image-5.png",
         milestones: [
@@ -185,11 +182,9 @@ const projectSample = {
             checked: false,
           },
         ],
-        milestoneColor: "#000000",
       },
       {
         title: "Phase 3",
-        titleColor: "#000000",
         visualType: "image",
         visualUrl: "assets/image-6.png",
         milestones: [
@@ -214,10 +209,10 @@ const projectSample = {
             checked: false,
           },
         ],
-        milestoneColor: "#000000",
       },
     ],
-    phaseColor: "#000000",
+    phasesTitleColor: "#000000",
+    milestonesTitleColor: "#000000",
     backgroundType: "hex",
     backgroundContent: "#FFFFFF",
   },
@@ -541,10 +536,6 @@ const phaseSchema = new mongoose.Schema({
   title: {
     type: String,
   },
-  titleColor: {
-    type: String,
-    default: "#000000",
-  },
   visualType: {
     type: String,
     enum: ["image", "video"],
@@ -573,11 +564,11 @@ const roadmapSchema = new mongoose.Schema({
     default: "#000000",
   },
   phases: [{ type: phaseSchema }],
-  phaseTitleColor: {
+  phasesTitleColor: {
     type: String,
     default: "#000000",
   },
-  milestoneTitleColor: {
+  milestonesTitleColor: {
     type: String,
     default: "#000000",
   },
