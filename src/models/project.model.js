@@ -16,7 +16,7 @@ const projectSample = {
     titleColor: "#000000",
     linkColorDesktop: "#000000",
     linkColorMobile: "#FFFFFF",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#000000",
   },
   hero: {
@@ -39,7 +39,7 @@ const projectSample = {
     linkBackgroundColor: "#000000",
     visualType: "image",
     visualUrl: "assets/image-2.png",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#FFFFFF",
   },
   about: {
@@ -59,7 +59,7 @@ const projectSample = {
         description: "Feature 1 Description",
         visualType: "image",
         visualUrl: "assets/feature-1.png",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
       {
@@ -67,7 +67,7 @@ const projectSample = {
         description: "Feature 2 Description",
         visualType: "image",
         visualUrl: "assets/feature-2.png",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
       {
@@ -75,7 +75,7 @@ const projectSample = {
         description: "Feature 3 Description",
         visualType: "image",
         visualUrl: "assets/feature-3.png",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
       {
@@ -83,13 +83,13 @@ const projectSample = {
         description: "Feature 4 Description",
         visualType: "image",
         visualUrl: "assets/feature-4.png",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
     ],
     featuresTitleColor: "#000000",
     featuresDescriptionColor: "#000000",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#FFFFFF",
   },
   tokenomics: {
@@ -104,7 +104,7 @@ const projectSample = {
         title: "Marketing",
         description:
           "6% of every transaction is taken and will be used for enhancements, operations, and marketing of the project.",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
       {
@@ -112,14 +112,14 @@ const projectSample = {
         title: "Liquidity",
         description:
           "1% of every transaction is transformed into liquidity. It's automatic and helps create a price floor.",
-        backgroundType: "hex",
+        backgroundType: "color",
         backgroundContent: "#FFFFFF",
       },
     ],
     feesPercentageColor: "#000000",
     feesTitleColor: "#000000",
     feesDescriptionColor: "#000000",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#FFFFFF",
   },
   roadmap: {
@@ -213,7 +213,7 @@ const projectSample = {
     ],
     phasesTitleColor: "#000000",
     milestonesTitleColor: "#000000",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#FFFFFF",
   },
   faq: {
@@ -246,7 +246,7 @@ const projectSample = {
     ],
     questionTitleColor: "#000000",
     questionAnswerColor: "#000000",
-    backgroundType: "hex",
+    backgroundType: "color",
     backgroundContent: "#FFFFFF",
   },
 };
@@ -305,9 +305,9 @@ const headerSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -356,9 +356,9 @@ const heroSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -385,7 +385,7 @@ const featureSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
   },
   backgroundContent: {
     type: String,
@@ -440,9 +440,9 @@ const aboutSchema = new mongoose.Schema({
 
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -467,7 +467,7 @@ const feeSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
   },
   backgroundContent: {
     type: String,
@@ -510,9 +510,9 @@ const tokenomicsSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -574,9 +574,9 @@ const roadmapSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -624,9 +624,9 @@ const faqSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
@@ -656,9 +656,9 @@ const footerSchema = new mongoose.Schema({
   },
   backgroundType: {
     type: String,
-    enum: ["image", "video", "hex"],
+    enum: ["image", "video", "color"],
     required: true,
-    default: "hex",
+    default: "color",
   },
   backgroundContent: {
     type: String,
