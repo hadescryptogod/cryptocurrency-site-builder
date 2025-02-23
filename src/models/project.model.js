@@ -244,8 +244,8 @@ const projectSample = {
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       },
     ],
-    questionColor: "#000000",
-    questionBackgroundColor: "#000000",
+    questionTitleColor: "#000000",
+    questionAnswerColor: "#000000",
     backgroundType: "hex",
     backgroundContent: "#FFFFFF",
   },
@@ -614,11 +614,11 @@ const faqSchema = new mongoose.Schema({
     default: "#000000",
   },
   questions: { type: [questionSchema] },
-  questionColor: {
+  questionsTitleColor: {
     type: String,
     default: "#000000",
   },
-  questionBackgroundColor: {
+  questionsAnswerColor: {
     type: String,
     default: "#000000",
   },
