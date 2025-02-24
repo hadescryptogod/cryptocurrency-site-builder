@@ -5,6 +5,7 @@ const cors = require("cors");
 
 // import routes
 const projectRoutes = require("./src/routes/project.routes");
+const uploadRoutes = require("./src/routes/upload.routes");
 
 // init express
 const app = express();
@@ -18,8 +19,13 @@ app.use(cors());
 // parse json body request
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static("public"));
+
 // routes
 app.use("/v1/projects", projectRoutes);
+app.use("/v1/uploads", uploadRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });
