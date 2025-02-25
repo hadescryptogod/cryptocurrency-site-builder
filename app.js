@@ -27,7 +27,7 @@ app.use(express.static("public"));
 // routes
 app.use("/v1/projects", projectRoutes);
 app.use("/v1/uploads", uploadRoutes);
-app.use("/v1/sites", uploadRoutes);
+app.use("/v1/sites", siteRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });
