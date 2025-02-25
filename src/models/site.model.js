@@ -293,15 +293,12 @@ const headerSchema = new mongoose.Schema({
   },
   titleColor: {
     type: String,
-    default: "#000000",
   },
   linkColorDesktop: {
     type: String,
-    default: "#000000",
   },
   linkColorMobile: {
     type: String,
-    default: "#FFFFFF",
   },
   backgroundType: {
     type: String,
@@ -310,7 +307,6 @@ const headerSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#000000",
   },
 });
 
@@ -322,25 +318,21 @@ const heroSchema = new mongoose.Schema({
   },
   headlineColor: {
     type: String,
-    default: "#000000",
   },
   shortDescription: {
     type: String,
   },
   shortDescriptionColor: {
     type: String,
-    defualt: "#000000",
   },
   links: {
     type: [linkSchema],
   },
   linkColor: {
     type: String,
-    default: "#FFFFFF",
   },
   linkBackgroundColor: {
     type: String,
-    default: "#000000",
   },
   visualType: {
     type: String,
@@ -357,7 +349,6 @@ const heroSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
@@ -393,14 +384,12 @@ const aboutSchema = new mongoose.Schema({
   },
   titleColor: {
     type: String,
-    default: "#000000",
   },
   description: {
     type: String,
   },
   descriptionColor: {
     type: String,
-    default: "#000000",
   },
   visualType: {
     type: String,
@@ -415,18 +404,15 @@ const aboutSchema = new mongoose.Schema({
   },
   longDescriptionColor: {
     type: String,
-    default: "#000000",
   },
   features: {
     type: [featureSchema],
   },
   featuresTitleColor: {
     type: String,
-    default: "#000000",
   },
   featuresDescriptionColor: {
     type: String,
-    default: "#000000",
   },
 
   backgroundType: {
@@ -436,7 +422,6 @@ const aboutSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
@@ -470,31 +455,26 @@ const tokenomicsSchema = new mongoose.Schema({
   },
   titleColor: {
     type: String,
-    default: "#000000",
   },
   description: {
     type: String,
   },
   descriptionColor: {
     type: String,
-    default: "#000000",
   },
   fees: [
     {
       type: feeSchema,
     },
   ],
-  feePercentageColor: {
+  feesPercentageColor: {
     type: String,
-    default: "#000000",
   },
-  feeTitleColor: {
+  feesTitleColor: {
     type: String,
-    default: "#000000",
   },
   feeDescriptionColor: {
     type: String,
-    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -503,7 +483,6 @@ const tokenomicsSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
@@ -539,23 +518,19 @@ const roadmapSchema = new mongoose.Schema({
   },
   titleColor: {
     type: String,
-    default: "#000000",
   },
   description: {
     type: String,
   },
   descriptionColor: {
     type: String,
-    default: "#000000",
   },
   phases: [{ type: phaseSchema }],
   phasesTitleColor: {
     type: String,
-    default: "#000000",
   },
   milestonesTitleColor: {
     type: String,
-    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -564,7 +539,6 @@ const roadmapSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
@@ -586,23 +560,19 @@ const faqSchema = new mongoose.Schema({
   },
   titleColor: {
     type: String,
-    default: "#000000",
   },
   description: {
     type: String,
   },
   descriptionColor: {
     type: String,
-    default: "#000000",
   },
   questions: { type: [questionSchema] },
   questionsTitleColor: {
     type: String,
-    default: "#000000",
   },
   questionsAnswerColor: {
     type: String,
-    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -611,7 +581,6 @@ const faqSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
@@ -625,14 +594,12 @@ const footerSchema = new mongoose.Schema({
   ],
   linkColor: {
     type: String,
-    default: "#000000",
   },
   disclaimer: {
     type: String,
   },
   disclaimerColor: {
     type: String,
-    default: "#000000",
   },
   backgroundType: {
     type: String,
@@ -641,7 +608,6 @@ const footerSchema = new mongoose.Schema({
   },
   backgroundContent: {
     type: String,
-    default: "#FFFFFF",
   },
 });
 
