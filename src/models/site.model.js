@@ -306,12 +306,10 @@ const headerSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#000000",
   },
 });
@@ -321,7 +319,6 @@ const headerSchema = new mongoose.Schema({
 const heroSchema = new mongoose.Schema({
   headline: {
     type: String,
-    required: true,
   },
   headlineColor: {
     type: String,
@@ -329,7 +326,6 @@ const heroSchema = new mongoose.Schema({
   },
   shortDescription: {
     type: String,
-    required: true,
   },
   shortDescriptionColor: {
     type: String,
@@ -357,12 +353,10 @@ const heroSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -396,7 +390,6 @@ const aboutSchema = new mongoose.Schema({
   title: {
     type: String,
     default: "About",
-    required: true,
   },
   titleColor: {
     type: String,
@@ -404,7 +397,6 @@ const aboutSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
   },
   descriptionColor: {
     type: String,
@@ -420,7 +412,6 @@ const aboutSchema = new mongoose.Schema({
   },
   longDescription: {
     type: String,
-    required: true,
   },
   longDescriptionColor: {
     type: String,
@@ -441,12 +432,10 @@ const aboutSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -478,7 +467,6 @@ const tokenomicsSchema = new mongoose.Schema({
   title: {
     type: String,
     default: "Tokenomics",
-    required: true,
   },
   titleColor: {
     type: String,
@@ -511,12 +499,10 @@ const tokenomicsSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -550,7 +536,6 @@ const roadmapSchema = new mongoose.Schema({
   title: {
     type: String,
     default: "Roadmap",
-    required: true,
   },
   titleColor: {
     type: String,
@@ -575,12 +560,10 @@ const roadmapSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -600,7 +583,6 @@ const faqSchema = new mongoose.Schema({
   title: {
     type: String,
     default: "FAQ",
-    required: true,
   },
   titleColor: {
     type: String,
@@ -625,12 +607,10 @@ const faqSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -657,12 +637,10 @@ const footerSchema = new mongoose.Schema({
   backgroundType: {
     type: String,
     enum: ["image", "video", "color"],
-    required: true,
     default: "color",
   },
   backgroundContent: {
     type: String,
-    required: true,
     default: "#FFFFFF",
   },
 });
@@ -672,11 +650,9 @@ const footerSchema = new mongoose.Schema({
 const siteSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
   slug: {
     type: String,
-    unique: true,
   },
   token: {
     type: tokenSchema,

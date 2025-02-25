@@ -72,4 +72,18 @@ exports.updateSiteBySlug = async (req, res, next) => {
 };
 
 // function to delete site by slug ex. abc-coin
-exports.deleteSiteBySlug = async (req, res, next) => {};
+exports.deleteSiteBySlug = async (req, res, next) => {
+  try {
+    // update site by slug
+    const site = await Site.findOneAndDelete({ slug: req.params.slug });
+
+    // check if site exists
+    if (!site) return res.status(404).json({ message: "Site not found." });
+
+    res.status(200).json({
+      site: site,
+    });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
