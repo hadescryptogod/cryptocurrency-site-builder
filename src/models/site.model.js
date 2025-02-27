@@ -473,7 +473,7 @@ const tokenomicsSchema = new mongoose.Schema({
   feesTitleColor: {
     type: String,
   },
-  feeDescriptionColor: {
+  feesDescriptionColor: {
     type: String,
   },
   backgroundType: {
@@ -616,9 +616,11 @@ const footerSchema = new mongoose.Schema({
 const siteSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
   },
   slug: {
     type: String,
+    unique: true,
   },
   token: {
     type: tokenSchema,
