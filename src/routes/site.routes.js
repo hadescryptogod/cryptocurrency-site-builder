@@ -25,4 +25,7 @@ router.patch("/:slug", siteController.updateSiteBySlug);
 // delete site by slug
 router.delete("/:slug", siteController.deleteSiteBySlug);
 
+// delete site by id
+router.delete("/:siteId/id", siteController.deleteSiteById);
+
 module.exports = router;

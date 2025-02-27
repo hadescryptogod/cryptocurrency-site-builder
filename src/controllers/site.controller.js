@@ -105,3 +105,20 @@ exports.deleteSiteBySlug = async (req, res, next) => {
     res.status(500).json({ err });
   }
 };
+
+// function to delete site by id ex. 67c0c121805fac691713b0b8
+exports.deleteSiteById = async (req, res, next) => {
+  try {
+    // update site by id
+    const site = await Site.findByIdAndDelete(req.params.siteId);
+
+    // check if site exists
+    if (!site) return res.status(404).json({ message: "Site not found." });
+
+    res.status(200).json({
+      site: site,
+    });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
