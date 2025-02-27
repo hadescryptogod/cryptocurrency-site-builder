@@ -51,7 +51,7 @@ exports.getSiteBySlug = async (req, res, next) => {
 exports.getSiteById = async (req, res, next) => {
   try {
     // get site by id
-    const site = await Site.findById(req.params.siteId)[0];
+    const site = await Site.findById(req.params.siteId);
 
     // check if site exists
     if (!site) return res.status(404).json({ message: "Site not found." });
