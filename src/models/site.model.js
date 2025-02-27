@@ -380,7 +380,6 @@ const featureSchema = new mongoose.Schema({
 const aboutSchema = new mongoose.Schema({
   title: {
     type: String,
-    default: "About",
   },
   titleColor: {
     type: String,
@@ -451,7 +450,6 @@ const feeSchema = new mongoose.Schema({
 const tokenomicsSchema = new mongoose.Schema({
   title: {
     type: String,
-    default: "Tokenomics",
   },
   titleColor: {
     type: String,
@@ -514,7 +512,6 @@ const phaseSchema = new mongoose.Schema({
 const roadmapSchema = new mongoose.Schema({
   title: {
     type: String,
-    default: "Roadmap",
   },
   titleColor: {
     type: String,
@@ -556,7 +553,6 @@ const questionSchema = {
 const faqSchema = new mongoose.Schema({
   title: {
     type: String,
-    default: "FAQ",
   },
   titleColor: {
     type: String,
