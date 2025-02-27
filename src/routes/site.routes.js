@@ -16,6 +16,9 @@ router.get("/", siteController.getAllSites);
 // get site by slug ex. abc-coin-1
 router.get("/:slug", siteController.getSiteBySlug);
 
+// get site by id ex. 67c0c121805fac691713b0b8
+router.get("/:siteId", siteController.getSiteById);
+
 // update site by slug
 router.patch("/:slug", siteController.updateSiteBySlug);
 

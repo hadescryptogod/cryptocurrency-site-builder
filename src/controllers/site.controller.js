@@ -47,6 +47,24 @@ exports.getSiteBySlug = async (req, res, next) => {
   }
 };
 
+// function to get site by id ex. 67c0c121805fac691713b0b8
+exports.getSiteById = async (req, res, next) => {
+  try {
+    // get site by id
+    const site = await Site.findById(req.params.siteId)[0];
+
+    // check if site exists
+    if (!site) return res.status(404).json({ message: "Site not found." });
+
+    // return res with site data
+    res.status(200).json({
+      site: site,
+    });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
 // function to update site by slug ex. abc-coin
 exports.updateSiteBySlug = async (req, res, next) => {
   try {
