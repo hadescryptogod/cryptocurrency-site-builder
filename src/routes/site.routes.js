@@ -28,4 +28,7 @@ router.delete("/:slug", siteController.deleteSiteBySlug);
 // delete site by id
 router.delete("/:siteId/id", siteController.deleteSiteById);
 
+// generate slug
+router.post("/generate_slug", siteController.generateSlug);
+
 module.exports = router;

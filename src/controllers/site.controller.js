@@ -1,6 +1,10 @@
 // import model
 const Site = require("../models/site.model");
 
+// import library
+const slugify = require("slugify");
+const crypto = require("crypto");
+
 // function to create site
 exports.createSite = async (req, res, next) => {
   try {
@@ -118,6 +122,34 @@ exports.deleteSiteById = async (req, res, next) => {
     res.status(200).json({
       site: site,
     });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+};
+
+// function to generate slug
+exports.generateSlug = async (req, res, next) => {
+  try {
+    // check if site exists with same site name
+    const site = await Site.findOne({
+      name: { $regex: new RegExp(req.body.projectName.trim(), "i") },
+    });
+
+    let slug;
+
+    // if site doesn't exists
+    if (!site) {
+      slug = slugify(req.body.projectName, { lower: true });
+    }
+    // if site exists
+    else {
+      slug =
+        slugify(req.body.projectName, { lower: true }) +
+        "-" +
+        crypto.randomBytes(3).toString("hex");
+    }
+
+    res.status(200).json({ slug: slug });
   } catch (err) {
     res.status(500).json({ err });
   }
