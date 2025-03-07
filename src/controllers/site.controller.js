@@ -130,6 +130,9 @@ exports.deleteSiteById = async (req, res, next) => {
 // function to generate slug
 exports.generateSlug = async (req, res, next) => {
   try {
+    if (req.body.projectName.trim() === "")
+      return res.status(200).json({ slug: "" });
+
     // check if site exists with same site name
     const site = await Site.findOne({
       name: { $regex: new RegExp(req.body.projectName.trim(), "i") },
