@@ -13,12 +13,9 @@ exports.upload = multer({ storage: storageConfig });
 
 exports.uploadFile = (req, res, next) => {
   const uploadedFile = req.file;
-  const fileUrl =
-    req.protocol + "://" + req.get("host") + "/files/" + uploadedFile.filename;
+  const file = uploadedFile.filename;
 
   res.status(201).json({
-    file: {
-      url: fileUrl,
-    },
+    file: file,
   });
 };

@@ -285,7 +285,7 @@ const tokenSchema = new mongoose.Schema({
 // header
 
 const headerSchema = new mongoose.Schema({
-  logoUrl: {
+  logoFile: {
     type: String,
   },
   title: {
@@ -328,7 +328,7 @@ const heroSchema = new mongoose.Schema({
   links: {
     type: [linkSchema],
   },
-  linkColor: {
+  linksColor: {
     type: String,
   },
   linkBackgroundColor: {
@@ -339,7 +339,7 @@ const heroSchema = new mongoose.Schema({
     enum: ["image", "video"],
     default: "image",
   },
-  visualUrl: {
+  visualFile: {
     type: String,
   },
   backgroundType: {
@@ -365,7 +365,7 @@ const featureSchema = new mongoose.Schema({
     type: String,
     enum: ["image", "video"],
   },
-  visualUrl: {
+  visualFile: {
     type: String,
   },
   backgroundType: {
@@ -395,7 +395,7 @@ const aboutSchema = new mongoose.Schema({
     enum: ["image", "video"],
     default: "image",
   },
-  visualUrl: {
+  visualFile: {
     type: String,
   },
   longDescription: {
@@ -503,7 +503,7 @@ const phaseSchema = new mongoose.Schema({
     type: String,
     enum: ["image", "video"],
   },
-  visualUrl: {
+  visualFile: {
     type: String,
   },
   milestones: [{ type: milestoneSchema }],
@@ -588,7 +588,7 @@ const footerSchema = new mongoose.Schema({
       type: linkSchema,
     },
   ],
-  linkColor: {
+  linksColor: {
     type: String,
   },
   disclaimer: {
