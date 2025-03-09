@@ -31,4 +31,7 @@ router.delete("/:siteId/id", siteController.deleteSiteById);
 // generate slug
 router.post("/generate_slug", siteController.generateSlug);
 
+// check payment
+router.post("/check_payment", siteController.checkPayment);
+
 module.exports = router;

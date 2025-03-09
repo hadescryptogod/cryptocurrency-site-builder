@@ -618,6 +618,13 @@ const siteSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  paid: {
+    type: Boolean,
+    default: false,
+  },
+  paymentContractAddress: {
+    type: String,
+  },
   token: {
     type: tokenSchema,
   },
