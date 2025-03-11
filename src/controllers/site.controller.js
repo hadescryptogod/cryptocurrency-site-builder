@@ -9,7 +9,7 @@ const { Web3 } = require("web3");
 // Loading the contract ABI and Bytecode
 // (the results of a previous compilation step)
 const fs = require("fs");
-const { abi, bytecode } = JSON.parse(fs.readFileSync("Demo.json"));
+const { abi, bytecode } = JSON.parse(fs.readFileSync("PaymentIntent.json"));
 
 // Configuring the connection to an Ethereum node
 const network = process.env.NETWORK;
@@ -33,17 +33,19 @@ exports.createSite = async (req, res, next) => {
     const contract = new web3.eth.Contract(abi);
     contract.options.data = bytecode;
     const deployTx = contract.deploy();
+    // console.log(await deployTx.estimateGas());
     const deployedContract = await deployTx
       .send({
         from: signer.address,
-        gas: await deployTx.estimateGas(),
+        // gas: await deployTx.estimateGas(),
+        gas: 1000000,
       })
       .once("transactionHash", (txhash) => {
         console.log(`Mining deployment transaction ...`);
         console.log(`https://testnet.bscscan.com/tx/${txhash}`);
       });
     // The contract is now deployed on chain!
-    console.log(`Contract deployed at ${deployedContract.options.address}`);
+    // console.log(`Contract deployed at ${deployedContract.options.address}`);
     // console.log(
     //   `Add DEMO_CONTRACT to the .env file to store the contract address: ${deployedContract.options.address}`
     // );
@@ -223,15 +225,132 @@ const balanceOfABI = [
   },
 ];
 
-// USDT token contract
-const tokenContract = "0x55d398326f99059ff775485246999027b3197955";
+// token contract
+const tokenContract = "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd";
+
+// // function to check if payment is sent
+// exports.checkPayment = async (req, res, next) => {
+//   // get site by id
+//   const site = await Site.findById(req.params.siteId);
+//   const paymentContractAddress = site.paymentContractAddress;
+//   // A USDT token holder
+//   const tokenHolder = paymentContractAddress;
+//   const contract = new web3.eth.Contract(balanceOfABI, tokenContract);
+//   const result = await contract.methods.balanceOf(tokenHolder).call();
+//   const formattedResult = web3.utils.fromWei(result, "ether");
+//   console.log(formattedResult);
+//   let paid = site.paid;
+//   if (Number(formattedResult) >= 0.0001) {
+//     // update site by slugf
+//     const updatedSite = await Site.findOneAndUpdate(
+//       { _id: site._id },
+//       { paid: true },
+//       {
+//         new: true,
+//         runValidators: true,
+//       }
+//     );
+//     console.log(updatedSite);
+//     paid = updatedSite.paid;
+//   }
+
+//   res.status(200).json({ paid: paid });
+// };
 
 // function to check if payment is sent
 exports.checkPayment = async (req, res, next) => {
+  // get site by id
+  const site = await Site.findById(req.params.siteId);
+  const paymentContractAddress = site.paymentContractAddress;
   // A USDT token holder
-  const tokenHolder = "0x88a1493366D48225fc3cEFbdae9eBb23E323Ade3";
+  const tokenHolder = paymentContractAddress;
   const contract = new web3.eth.Contract(balanceOfABI, tokenContract);
   const result = await contract.methods.balanceOf(tokenHolder).call();
   const formattedResult = web3.utils.fromWei(result, "ether");
   console.log(formattedResult);
+  let paid = site.paid;
+  if (Number(formattedResult) >= 0.1) {
+    // update site by slugf
+    const updatedSite = await Site.findOneAndUpdate(
+      { _id: site._id },
+      { paid: true },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    paid = updatedSite.paid;
+
+    // const contract2 = new web3.eth.Contract(
+    //   abi,
+    //   // Replace this with the address of your deployed contract
+    //   paymentContractAddress
+    // );
+
+    // const result = await contract2.methods
+    //   .getSmartContractTokenBalance(tokenContract)
+    //   .call();
+    // // const formattedResult = web3.utils.fromWei(result, "ether");
+    // console.log(result);
+
+    // // Issuing a transaction that calls the `withdraw` method
+    // const method_abi = contract2.methods.withdraw(tokenContract).encodeABI();
+    // const tx = {
+    //   from: signer.address,
+    //   to: contract2.options.address,
+    //   data: method_abi,
+    //   value: "0",
+    //   gasPrice: "100000000000",
+    // };
+    // const gas_estimate = await web3.eth.estimateGas(tx);
+    // tx.gas = gas_estimate;
+    // const signedTx = await web3.eth.accounts.signTransaction(
+    //   tx,
+    //   signer.privateKey
+    // );
+    // console.log("Raw transaction data: " + signedTx.rawTransaction);
+    // // Sending the transaction to the network
+    // const receipt = await web3.eth
+    //   .sendSignedTransaction(signedTx.rawTransaction)
+    //   .once("transactionHash", (txhash) => {
+    //     console.log(`Mining transaction ...`);
+    //     console.log(`https://testnet.bscscan.com/tx/${txhash}`);
+    //   });
+    // // The transaction is now on chain!
+    // console.log(`Mined in block ${receipt.blockNumber}`);
+
+    // Creating a Contract instance
+    const contract = new web3.eth.Contract(
+      abi,
+      // Replace this with the address of your deployed contract
+      paymentContractAddress
+    );
+    // Issuing a transaction that calls the `echo` method
+    const method_abi = contract.methods.withdraw(tokenContract).encodeABI();
+    const tx = {
+      from: signer.address,
+      to: contract.options.address,
+      data: method_abi,
+      value: "0",
+      gasPrice: "100000000000",
+    };
+    const gas_estimate = await web3.eth.estimateGas(tx);
+    tx.gas = gas_estimate;
+    const signedTx = await web3.eth.accounts.signTransaction(
+      tx,
+      signer.privateKey
+    );
+    console.log("Raw transaction data: " + signedTx.rawTransaction);
+    // Sending the transaction to the network
+    const receipt = await web3.eth
+      .sendSignedTransaction(signedTx.rawTransaction)
+      .once("transactionHash", (txhash) => {
+        console.log(`Mining transaction ...`);
+        console.log(`https://testnet.bscscan.com/tx/${txhash}`);
+      });
+    // The transaction is now on chain!
+    console.log(`Mined in block ${receipt.blockNumber}`);
+  }
+
+  res.status(200).json({ paid: paid, balance: formattedResult });
 };
