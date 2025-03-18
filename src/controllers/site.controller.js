@@ -228,35 +228,6 @@ const balanceOfABI = [
 // token contract
 const tokenContract = "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd";
 
-// // function to check if payment is sent
-// exports.checkPayment = async (req, res, next) => {
-//   // get site by id
-//   const site = await Site.findById(req.params.siteId);
-//   const paymentContractAddress = site.paymentContractAddress;
-//   // A USDT token holder
-//   const tokenHolder = paymentContractAddress;
-//   const contract = new web3.eth.Contract(balanceOfABI, tokenContract);
-//   const result = await contract.methods.balanceOf(tokenHolder).call();
-//   const formattedResult = web3.utils.fromWei(result, "ether");
-//   console.log(formattedResult);
-//   let paid = site.paid;
-//   if (Number(formattedResult) >= 0.0001) {
-//     // update site by slugf
-//     const updatedSite = await Site.findOneAndUpdate(
-//       { _id: site._id },
-//       { paid: true },
-//       {
-//         new: true,
-//         runValidators: true,
-//       }
-//     );
-//     console.log(updatedSite);
-//     paid = updatedSite.paid;
-//   }
-
-//   res.status(200).json({ paid: paid });
-// };
-
 // function to check if payment is sent
 exports.checkPayment = async (req, res, next) => {
   // get site by id
