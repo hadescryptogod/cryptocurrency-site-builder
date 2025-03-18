@@ -14,7 +14,7 @@ exports.getTokenData = async (req, res, next) => {
 
     // token rpc endpoint
     const { endpoint } = token.tokenNetworks.filter(
-      (network) => network.slug === tokenNetwork
+      (network) => network.name === tokenNetwork
     )[0];
 
     console.log(endpoint);
@@ -36,15 +36,20 @@ exports.getTokenData = async (req, res, next) => {
     // token data
     const name = await contract.methods.name().call();
     const symbol = await contract.methods.symbol().call();
-    const totalSupply = await contract.methods.totalSupply().call();
+    const decimals = await contract.methods.decimals().call();
+    let totalSupply = await contract.methods.totalSupply().call();
+
+    if (!totalSupply) {
+      totalSupply = await contract.methods._totalSupply().call();
+    }
+
+    totalSupply = (totalSupply / BigInt(10) ** BigInt(decimals)).toString();
 
     const tokenData = {
       name,
       symbol,
-      totalSupply: Math.floor(web3.utils.fromWei(totalSupply, "ether")),
+      totalSupply: totalSupply,
     };
-
-    console.log(tokenData);
 
     res.status(200).json({ token: tokenData });
   } catch (err) {

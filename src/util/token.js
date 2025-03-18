@@ -1,24 +1,20 @@
 exports.tokenNetworks = [
   {
-    name: "Ethereum - Mainnet",
-    slug: "ethereum-mainnet",
+    name: "Ethereum Chain",
     endpoint: "https://mainnet.infura.io/v3/765129c1738643c5a9b0d18b6ef33de0",
   },
   {
-    name: "Base - Mainnet",
-    slug: "base-mainnet",
+    name: "Base Chain",
     endpoint:
       "https://base-mainnet.infura.io/v3/765129c1738643c5a9b0d18b6ef33de0",
   },
   {
-    name: "BSC - Mainnet",
-    slug: "bsc-mainnet",
+    name: "BNB Chain",
     endpoint:
       "https://bsc-mainnet.infura.io/v3/765129c1738643c5a9b0d18b6ef33de0",
   },
   {
-    name: "BSC - Testnet",
-    slug: "bsc-testnet",
+    name: "BNB Chain - Testnet",
     endpoint:
       "https://bsc-testnet.infura.io/v3/765129c1738643c5a9b0d18b6ef33de0",
   },
@@ -67,6 +63,20 @@ exports.erc20TokenABI = [
     constant: true,
     inputs: [],
     name: "totalSupply",
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+      },
+    ],
+    payable: false,
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    constant: true,
+    inputs: [],
+    name: "_totalSupply",
     outputs: [
       {
         name: "",
