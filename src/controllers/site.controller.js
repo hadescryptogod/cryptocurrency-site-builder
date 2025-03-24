@@ -252,44 +252,6 @@ exports.checkPayment = async (req, res, next) => {
     );
     paid = updatedSite.paid;
 
-    // const contract2 = new web3.eth.Contract(
-    //   abi,
-    //   // Replace this with the address of your deployed contract
-    //   paymentContractAddress
-    // );
-
-    // const result = await contract2.methods
-    //   .getSmartContractTokenBalance(tokenContract)
-    //   .call();
-    // // const formattedResult = web3.utils.fromWei(result, "ether");
-    // console.log(result);
-
-    // // Issuing a transaction that calls the `withdraw` method
-    // const method_abi = contract2.methods.withdraw(tokenContract).encodeABI();
-    // const tx = {
-    //   from: signer.address,
-    //   to: contract2.options.address,
-    //   data: method_abi,
-    //   value: "0",
-    //   gasPrice: "100000000000",
-    // };
-    // const gas_estimate = await web3.eth.estimateGas(tx);
-    // tx.gas = gas_estimate;
-    // const signedTx = await web3.eth.accounts.signTransaction(
-    //   tx,
-    //   signer.privateKey
-    // );
-    // console.log("Raw transaction data: " + signedTx.rawTransaction);
-    // // Sending the transaction to the network
-    // const receipt = await web3.eth
-    //   .sendSignedTransaction(signedTx.rawTransaction)
-    //   .once("transactionHash", (txhash) => {
-    //     console.log(`Mining transaction ...`);
-    //     console.log(`https://testnet.bscscan.com/tx/${txhash}`);
-    //   });
-    // // The transaction is now on chain!
-    // console.log(`Mined in block ${receipt.blockNumber}`);
-
     // Creating a Contract instance
     const contract = new web3.eth.Contract(
       abi,

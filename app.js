@@ -7,6 +7,7 @@ const cors = require("cors");
 const uploadRoutes = require("./src/routes/upload.routes");
 const siteRoutes = require("./src/routes/site.routes");
 const tokenRoutes = require("./src/routes/token.routes");
+const aiRoutes = require("./src/routes/ai.routes");
 
 // init express
 const app = express();
@@ -28,6 +29,7 @@ app.use(express.static("public"));
 app.use("/v1/uploads", uploadRoutes);
 app.use("/v1/sites", siteRoutes);
 app.use("/v1/tokens", tokenRoutes);
+app.use("/v1/ai", aiRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });

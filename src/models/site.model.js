@@ -331,7 +331,7 @@ const heroSchema = new mongoose.Schema({
   linksColor: {
     type: String,
   },
-  linkBackgroundColor: {
+  linksBackgroundColor: {
     type: String,
   },
   visualType: {
@@ -620,9 +620,15 @@ const siteSchema = new mongoose.Schema({
   },
   paid: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   paymentContractAddress: {
+    type: String,
+  },
+  headingFont: {
+    type: String,
+  },
+  bodyFont: {
     type: String,
   },
   token: {
