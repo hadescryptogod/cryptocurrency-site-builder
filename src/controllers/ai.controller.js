@@ -96,7 +96,7 @@ exports.generateImages = async (req, res, next) => {
     }
   } catch (err) {
     siteData.header.logoFile = "";
-    console.log("Error generating image.");
+    console.log("Error generating image.", err.message);
   }
 
   // hero
@@ -125,7 +125,7 @@ exports.generateImages = async (req, res, next) => {
     heroFinished = true;
     siteData.hero.visualType = "image";
     siteData.hero.visualFile = "";
-    console.log("Error generating image.");
+    console.log("Error generating image.", err.message);
   }
 
   console.log("Generating image for hero background...");
@@ -150,7 +150,7 @@ exports.generateImages = async (req, res, next) => {
   } catch (err) {
     siteData.hero.backgroundType = "image";
     siteData.hero.backgroundContent = "";
-    console.log("Error generating image.");
+    console.log("Error generating image.", err.message);
   }
 
   // about
@@ -176,7 +176,7 @@ exports.generateImages = async (req, res, next) => {
   } catch (err) {
     siteData.about.visualType = "image";
     siteData.about.visualFile = "";
-    console.log("Error generating image.");
+    console.log("Error generating image.", err.message);
   }
 
   // features
@@ -208,7 +208,7 @@ exports.generateImages = async (req, res, next) => {
           }
         }
       } catch (err) {
-        console.log("Error generating image.");
+        console.log("Error generating image.", err.message);
         return {
           ...feature,
           backgroundType: "color",
@@ -248,7 +248,7 @@ exports.generateImages = async (req, res, next) => {
           }
         }
       } catch (err) {
-        console.log("Error generating image.");
+        console.log("Error generating image.", err.message);
         return {
           ...fee,
           backgroundType: "image",
@@ -282,7 +282,7 @@ exports.generateImages = async (req, res, next) => {
           }
         }
       } catch (err) {
-        console.log("Error generating image.");
+        console.log("Error generating image.", err.message);
         return { ...phase, visualType: "image", visualFile: "" };
       }
 
