@@ -66,127 +66,122 @@ exports.generateContent = async (req, res, next) => {
 // generate AI images
 exports.generateImages = async (req, res, next) => {
   const siteData = req.body;
-
-  // Set responseModalities to include "Image" so the model can generate  an image
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash-exp-image-generation",
-    generationConfig: {
-      responseModalities: ["Text", "Image"],
-    },
-  });
-
-  // header
-  console.log("Generating image for header logo...");
-  try {
-    const headerResponse = await model.generateContent(
-      `${siteData.header.logoFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}.Generate 1 image only.`
-    );
-    for (const part of headerResponse.response.candidates[0].content.parts) {
-      // Based on the part type, either show the text or save the image
-      if (part.text) {
-        console.log(part.text);
-      } else if (part.inlineData) {
-        const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
-        const filename = `${Date.now()}.png`;
-        fs.writeFileSync(`./public/files/${filename}`, buffer);
-        console.log(`Image saved as ${filename}.png`);
-        siteData.header.logoFile = filename;
+  
+    // Set responseModalities to include "Image" so the model can generate  an image
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"],
+      },
+    });
+  
+    // header
+    console.log("Generating image for header logo...");
+    try {
+      const headerResponse = await model.generateContent(
+        `${siteData.header.logoFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}.Generate 1 image only.`
+      );
+      for (const part of headerResponse.response.candidates[0].content.parts) {
+        // Based on the part type, either show the text or save the image
+        if (part.text) {
+          console.log(part.text);
+        } else if (part.inlineData) {
+          const imageData = part.inlineData.data;
+          const buffer = Buffer.from(imageData, "base64");
+          const filename = `${Date.now()}.png`;
+          fs.writeFileSync(`./public/files/${filename}`, buffer);
+          console.log(`Image saved as ${filename}.png`);
+          siteData.header.logoFile = filename;
+        }
       }
+    } catch (err) {
+      siteData.header.logoFile = "";
+      console.log("Error generating image." , err.message);
     }
-  } catch (err) {
-    siteData.header.logoFile = "";
-    console.log("Error generating image.", err.message);
-  }
-
-  // hero
-  let heroFinished;
-  console.log("Generating image for hero visual...");
-  try {
-    const heroResponse = await model.generateContent(
-      `${siteData.hero.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
-    );
-    for (const part of heroResponse.response.candidates[0].content.parts) {
-      // Based on the part type, either show the text or save the image
-      if (part.text) {
-        console.log(part.text);
-      } else if (part.inlineData) {
-        const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
-        const filename = `${Date.now()}.png`;
-        fs.writeFileSync(`./public/files/${filename}`, buffer);
-        console.log(`Image saved as ${filename}.png`);
-        siteData.hero.visualType = "image";
-        siteData.hero.visualFile = filename;
-        heroFinished = true;
+  
+    // hero
+    let heroFinished;
+    console.log("Generating image for hero visual...");
+    try {
+      const heroResponse = await model.generateContent(
+        `${siteData.hero.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+      );
+      for (const part of heroResponse.response.candidates[0].content.parts) {
+        // Based on the part type, either show the text or save the image
+        if (part.text) {
+          console.log(part.text);
+        } else if (part.inlineData) {
+          const imageData = part.inlineData.data;
+          const buffer = Buffer.from(imageData, "base64");
+          const filename = `${Date.now()}.png`;
+          fs.writeFileSync(`./public/files/${filename}`, buffer);
+          console.log(`Image saved as ${filename}.png`);
+          siteData.hero.visualType = "image";
+          siteData.hero.visualFile = filename;
+          heroFinished = true;
+        }
       }
+    } catch (err) {
+      heroFinished = true;
+      siteData.hero.visualType = "image";
+      siteData.hero.visualFile = "";
+      console.log("Error generating image.");
     }
-  } catch (err) {
-    heroFinished = true;
-    siteData.hero.visualType = "image";
-    siteData.hero.visualFile = "";
-    console.log("Error generating image.");
-  }
-
-  console.log("Generating image for hero background...");
-  try {
-    const heroResponse2 = await model.generateContent(
-      `${siteData.hero.backgroundContent}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
-    );
-    for (const part of heroResponse2.response.candidates[0].content.parts) {
-      // Based on the part type, either show the text or save the image
-      if (part.text) {
-        console.log(part.text);
-      } else if (part.inlineData) {
-        const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
-        const filename = `${Date.now()}.png`;
-        fs.writeFileSync(`./public/files/${filename}`, buffer);
-        console.log(`Image saved as ${filename}.png`);
-        siteData.hero.backgroundType = "image";
-        siteData.hero.backgroundContent = filename;
+  
+    console.log("Generating image for hero background...");
+    try {
+      const heroResponse2 = await model.generateContent(
+        `${siteData.hero.backgroundContent}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+      );
+      for (const part of heroResponse2.response.candidates[0].content.parts) {
+        // Based on the part type, either show the text or save the image
+        if (part.text) {
+          console.log(part.text);
+        } else if (part.inlineData) {
+          const imageData = part.inlineData.data;
+          const buffer = Buffer.from(imageData, "base64");
+          const filename = `${Date.now()}.png`;
+          fs.writeFileSync(`./public/files/${filename}`, buffer);
+          console.log(`Image saved as ${filename}.png`);
+          siteData.hero.backgroundType = "image";
+          siteData.hero.backgroundContent = filename;
+        }
       }
+    } catch (err) {
+      siteData.hero.backgroundType = "image";
+      siteData.hero.backgroundContent = "";
+      console.log("Error generating image.");
     }
-  } catch (err) {
-    siteData.hero.backgroundType = "image";
-    siteData.hero.backgroundContent = "";
-    console.log("Error generating image.");
-  }
-
-  // about
-  console.log("Generating image for about visual...");
-  try {
-    const aboutResponse = await model.generateContent(
-      `${siteData.about.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
-    );
-    for (const part of aboutResponse.response.candidates[0].content.parts) {
-      // Based on the part type, either show the text or save the image
-      if (part.text) {
-        console.log(part.text);
-      } else if (part.inlineData) {
-        const imageData = part.inlineData.data;
-        const buffer = Buffer.from(imageData, "base64");
-        const filename = `${Date.now()}.png`;
-        fs.writeFileSync(`./public/files/${filename}`, buffer);
-        console.log(`Image saved as ${filename}.png`);
-        siteData.about.visualType = "image";
-        siteData.about.visualFile = filename;
+  
+    // about
+    console.log("Generating image for about visual...");
+    try {
+      const aboutResponse = await model.generateContent(
+        `${siteData.about.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+      );
+      for (const part of aboutResponse.response.candidates[0].content.parts) {
+        // Based on the part type, either show the text or save the image
+        if (part.text) {
+          console.log(part.text);
+        } else if (part.inlineData) {
+          const imageData = part.inlineData.data;
+          const buffer = Buffer.from(imageData, "base64");
+          const filename = `${Date.now()}.png`;
+          fs.writeFileSync(`./public/files/${filename}`, buffer);
+          console.log(`Image saved as ${filename}.png`);
+          siteData.about.visualType = "image";
+          siteData.about.visualFile = filename;
+        }
       }
+    } catch (err) {
+      siteData.about.visualType = "image";
+      siteData.about.visualFile = "";
+      console.log("Error generating image.");
     }
-  } catch (err) {
-    siteData.about.visualType = "image";
-    siteData.about.visualFile = "";
-    console.log("Error generating image.");
-  }
-
-  // images counter
-  let imagesCounter = 0;
-
-  // features
-  let featuresImagesGenerated;
-  siteData.about.features = await Promise.all(
-    siteData.about.features.map(async (feature, index) => {
-      setTimeout(async () => {
+  
+    // features
+    siteData.about.features = await Promise.all(
+      siteData.about.features.map(async (feature, index) => {
         console.log(`Generating image for about feature #${index + 1}...`);
         try {
           const featureResponse = await model.generateContent(
@@ -203,10 +198,6 @@ exports.generateImages = async (req, res, next) => {
               const filename = `${Date.now()}.png`;
               fs.writeFileSync(`./public/files/${filename}`, buffer);
               console.log(`Image saved as ${filename}.png`);
-              if (siteData.about.features.length === index + 1) {
-                featuresImagesGenerated = true;
-                imagesCounter += siteData.about.features.length - 1;
-              }
               return {
                 ...feature,
                 backgroundType: "color",
@@ -217,12 +208,7 @@ exports.generateImages = async (req, res, next) => {
             }
           }
         } catch (err) {
-          console.log("Error generating image.", err.message);
-          if (siteData.about.features.length === index + 1) {
-            featuresImagesGenerated = true;
-            imagesCounter += siteData.about.features.length - 1;
-          }
-
+          console.log("Error generating image.");
           return {
             ...feature,
             backgroundType: "color",
@@ -231,104 +217,349 @@ exports.generateImages = async (req, res, next) => {
             visualFile: "",
           };
         }
-      }, 3000 * index);
-
-      return feature;
-    })
-  );
-
-  // // tokenomics
-  // let feesImagesGenerated = false;
-  // siteData.tokenomics.fees = await Promise.all(
-  //   siteData.tokenomics.fees.map(async (fee, index) => {
-  //     setTimeout(async () => {
-  //       console.log(`Generating image for tokenomics fee #${index + 1}...`);
-  //       try {
-  //         const feeResponse = await model.generateContent(
-  //           `${fee.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
-  //         );
-  //         for (const part of feeResponse.response.candidates[0].content.parts) {
-  //           // Based on the part type, either show the text or save the image
-  //           if (part.text) {
-  //             // console.log(part.text);
-  //           } else if (part.inlineData) {
-  //             const imageData = part.inlineData.data;
-  //             const buffer = Buffer.from(imageData, "base64");
-  //             const filename = `${Date.now()}.png`;
-  //             fs.writeFileSync(`./public/files/${filename}`, buffer);
-  //             console.log(`Image saved as ${filename}.png`);
-  //             if (siteData.tokenomics.fees.length === index + 1) {
-  //               feesImagesGenerated = true;
-  //               imagesCounter += siteData.tokenomics.fees.length - 1;
-  //             }
-  //             return {
-  //               ...fee,
-  //               backgroundType: "image",
-  //               backgroundContent: filename,
-  //             };
-  //           }
-  //         }
-  //       } catch (err) {
-  //         console.log("Error generating image.", err.message);
-  //         if (siteData.tokenomics.fees.length === index + 1) {
-  //           feesImagesGenerated = true;
-  //           imagesCounter += siteData.tokenomics.fees.length - 1;
-  //         }
-  //         return {
-  //           ...fee,
-  //           backgroundType: "image",
-  //           backgroundContent: "",
-  //         };
-  //       }
-  //     }, imagesCounter * 1000);
-
-  //     return fee;
-  //   })
-  // );
-
-  // // roadmap
-  // let phasesImagesGenerated = false;
-  // siteData.roadmap.phases = await Promise.all(
-  //   siteData.roadmap.phases.map(async (phase, index) => {
-  //     setTimeout(async () => {
-  //       console.log(`Generating image for roadmap phase #${index + 1}...`);
-  //       try {
-  //         const phaseResponse = await model.generateContent(
-  //           `${phase.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
-  //         );
-  //         for (const part of phaseResponse.response.candidates[0].content
-  //           .parts) {
-  //           // Based on the part type, either show the text or save the image
-  //           if (part.text) {
-  //             // console.log(part.text);
-  //           } else if (part.inlineData) {
-  //             const imageData = part.inlineData.data;
-  //             const buffer = Buffer.from(imageData, "base64");
-  //             const filename = `${Date.now()}.png`;
-  //             fs.writeFileSync(`./public/files/${filename}`, buffer);
-  //             console.log(`Image saved as ${filename}.png`);
-  //             if (siteData.roadmap.phases.length === index + 1) {
-  //               phasesImagesGeneratedImagesGenerated = true;
-  //             }
-  //             return { ...phase, visualType: "image", visualFile: filename };
-  //           }
-  //         }
-  //       } catch (err) {
-  //         console.log("Error generating image.", err.message);
-  //         if (siteData.roadmap.phases.length === index + 1) {
-  //           phasesImagesGeneratedImagesGenerated = true;
-  //         }
-  //         return { ...phase, visualType: "image", visualFile: "" };
-  //       }
-  //     }, imagesCounter * 1000);
-
-  //     return phase;
-  //   })
-  // );
-  if (featuresImagesGenerated 
-    // && feesImagesGenerated 
-    // && phasesImagesGenerated
-  ) {
+  
+        return feature;
+      })
+    );
+  
+    // tokenomics
+    siteData.tokenomics.fees = await Promise.all(
+      siteData.tokenomics.fees.map(async (fee, index) => {
+        console.log(`Generating image for tokenomics fee #${index + 1}...`);
+        try {
+          const feeResponse = await model.generateContent(
+            `${fee.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+          );
+          for (const part of feeResponse.response.candidates[0].content.parts) {
+            // Based on the part type, either show the text or save the image
+            if (part.text) {
+              // console.log(part.text);
+            } else if (part.inlineData) {
+              const imageData = part.inlineData.data;
+              const buffer = Buffer.from(imageData, "base64");
+              const filename = `${Date.now()}.png`;
+              fs.writeFileSync(`./public/files/${filename}`, buffer);
+              console.log(`Image saved as ${filename}.png`);
+              return {
+                ...fee,
+                backgroundType: "image",
+                backgroundContent: filename,
+              };
+            }
+          }
+        } catch (err) {
+          console.log("Error generating image.");
+          return {
+            ...fee,
+            backgroundType: "image",
+            backgroundContent: "",
+          };
+        }
+  
+        return fee;
+      })
+    );
+  
+    // roadmap
+    siteData.roadmap.phases = await Promise.all(
+      siteData.roadmap.phases.map(async (phase, index) => {
+        console.log(`Generating image for roadmap phase #${index + 1}...`);
+        try {
+          const phaseResponse = await model.generateContent(
+            `${phase.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+          );
+          for (const part of phaseResponse.response.candidates[0].content.parts) {
+            // Based on the part type, either show the text or save the image
+            if (part.text) {
+              // console.log(part.text);
+            } else if (part.inlineData) {
+              const imageData = part.inlineData.data;
+              const buffer = Buffer.from(imageData, "base64");
+              const filename = `${Date.now()}.png`;
+              fs.writeFileSync(`./public/files/${filename}`, buffer);
+              console.log(`Image saved as ${filename}.png`);
+              return { ...phase, visualType: "image", visualFile: filename };
+            }
+          }
+        } catch (err) {
+          console.log("Error generating image.");
+          return { ...phase, visualType: "image", visualFile: "" };
+        }
+  
+        return phase;
+      })
+    );
+  
     res.status(200).json({ site: siteData });
-  }
 };
+
+
+// // generate AI images
+// exports.generateImages = async (req, res, next) => {
+//   const siteData = req.body;
+
+//   // Set responseModalities to include "Image" so the model can generate  an image
+//   const model = genAI.getGenerativeModel({
+//     model: "gemini-2.0-flash-exp-image-generation",
+//     generationConfig: {
+//       responseModalities: ["Text", "Image"],
+//     },
+//   });
+
+//   // header
+//   console.log("Generating image for header logo...");
+//   try {
+//     const headerResponse = await model.generateContent(
+//       `${siteData.header.logoFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}.Generate 1 image only.`
+//     );
+//     for (const part of headerResponse.response.candidates[0].content.parts) {
+//       // Based on the part type, either show the text or save the image
+//       if (part.text) {
+//         console.log(part.text);
+//       } else if (part.inlineData) {
+//         const imageData = part.inlineData.data;
+//         const buffer = Buffer.from(imageData, "base64");
+//         const filename = `${Date.now()}.png`;
+//         fs.writeFileSync(`./public/files/${filename}`, buffer);
+//         console.log(`Image saved as ${filename}.png`);
+//         siteData.header.logoFile = filename;
+//       }
+//     }
+//   } catch (err) {
+//     siteData.header.logoFile = "";
+//     console.log("Error generating image.", err.message);
+//   }
+
+//   // hero
+//   let heroFinished;
+//   console.log("Generating image for hero visual...");
+//   try {
+//     const heroResponse = await model.generateContent(
+//       `${siteData.hero.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//     );
+//     for (const part of heroResponse.response.candidates[0].content.parts) {
+//       // Based on the part type, either show the text or save the image
+//       if (part.text) {
+//         console.log(part.text);
+//       } else if (part.inlineData) {
+//         const imageData = part.inlineData.data;
+//         const buffer = Buffer.from(imageData, "base64");
+//         const filename = `${Date.now()}.png`;
+//         fs.writeFileSync(`./public/files/${filename}`, buffer);
+//         console.log(`Image saved as ${filename}.png`);
+//         siteData.hero.visualType = "image";
+//         siteData.hero.visualFile = filename;
+//         heroFinished = true;
+//       }
+//     }
+//   } catch (err) {
+//     heroFinished = true;
+//     siteData.hero.visualType = "image";
+//     siteData.hero.visualFile = "";
+//     console.log("Error generating image.");
+//   }
+
+//   console.log("Generating image for hero background...");
+//   try {
+//     const heroResponse2 = await model.generateContent(
+//       `${siteData.hero.backgroundContent}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//     );
+//     for (const part of heroResponse2.response.candidates[0].content.parts) {
+//       // Based on the part type, either show the text or save the image
+//       if (part.text) {
+//         console.log(part.text);
+//       } else if (part.inlineData) {
+//         const imageData = part.inlineData.data;
+//         const buffer = Buffer.from(imageData, "base64");
+//         const filename = `${Date.now()}.png`;
+//         fs.writeFileSync(`./public/files/${filename}`, buffer);
+//         console.log(`Image saved as ${filename}.png`);
+//         siteData.hero.backgroundType = "image";
+//         siteData.hero.backgroundContent = filename;
+//       }
+//     }
+//   } catch (err) {
+//     siteData.hero.backgroundType = "image";
+//     siteData.hero.backgroundContent = "";
+//     console.log("Error generating image.");
+//   }
+
+//   // about
+//   console.log("Generating image for about visual...");
+//   try {
+//     const aboutResponse = await model.generateContent(
+//       `${siteData.about.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//     );
+//     for (const part of aboutResponse.response.candidates[0].content.parts) {
+//       // Based on the part type, either show the text or save the image
+//       if (part.text) {
+//         console.log(part.text);
+//       } else if (part.inlineData) {
+//         const imageData = part.inlineData.data;
+//         const buffer = Buffer.from(imageData, "base64");
+//         const filename = `${Date.now()}.png`;
+//         fs.writeFileSync(`./public/files/${filename}`, buffer);
+//         console.log(`Image saved as ${filename}.png`);
+//         siteData.about.visualType = "image";
+//         siteData.about.visualFile = filename;
+//       }
+//     }
+//   } catch (err) {
+//     siteData.about.visualType = "image";
+//     siteData.about.visualFile = "";
+//     console.log("Error generating image.");
+//   }
+
+//   // images counter
+//   let imagesCounter = 0;
+
+//   // features
+//   let featuresImagesGenerated;
+//   siteData.about.features = await Promise.all(
+//     siteData.about.features.map(async (feature, index) => {
+//       setTimeout(async () => {
+//         console.log(`Generating image for about feature #${index + 1}...`);
+//         try {
+//           const featureResponse = await model.generateContent(
+//             `${feature.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//           );
+//           for (const part of featureResponse.response.candidates[0].content
+//             .parts) {
+//             // Based on the part type, either show the text or save the image
+//             if (part.text) {
+//               console.log(part.text);
+//             } else if (part.inlineData) {
+//               const imageData = part.inlineData.data;
+//               const buffer = Buffer.from(imageData, "base64");
+//               const filename = `${Date.now()}.png`;
+//               fs.writeFileSync(`./public/files/${filename}`, buffer);
+//               console.log(`Image saved as ${filename}.png`);
+//               if (siteData.about.features.length === index + 1) {
+//                 featuresImagesGenerated = true;
+//                 imagesCounter += siteData.about.features.length - 1;
+//               }
+//               return {
+//                 ...feature,
+//                 backgroundType: "color",
+//                 backgroundContent: siteData.backgroundColor[0],
+//                 visualType: "image",
+//                 visualFile: filename,
+//               };
+//             }
+//           }
+//         } catch (err) {
+//           console.log("Error generating image.", err.message);
+//           if (siteData.about.features.length === index + 1) {
+//             featuresImagesGenerated = true;
+//             imagesCounter += siteData.about.features.length - 1;
+//           }
+
+//           return {
+//             ...feature,
+//             backgroundType: "color",
+//             backgroundContent: siteData.backgroundColor[0],
+//             visualType: "image",
+//             visualFile: "",
+//           };
+//         }
+//       }, 3000 * index);
+
+//       return feature;
+//     })
+//   );
+
+//   // // tokenomics
+//   // let feesImagesGenerated = false;
+//   // siteData.tokenomics.fees = await Promise.all(
+//   //   siteData.tokenomics.fees.map(async (fee, index) => {
+//   //     setTimeout(async () => {
+//   //       console.log(`Generating image for tokenomics fee #${index + 1}...`);
+//   //       try {
+//   //         const feeResponse = await model.generateContent(
+//   //           `${fee.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//   //         );
+//   //         for (const part of feeResponse.response.candidates[0].content.parts) {
+//   //           // Based on the part type, either show the text or save the image
+//   //           if (part.text) {
+//   //             // console.log(part.text);
+//   //           } else if (part.inlineData) {
+//   //             const imageData = part.inlineData.data;
+//   //             const buffer = Buffer.from(imageData, "base64");
+//   //             const filename = `${Date.now()}.png`;
+//   //             fs.writeFileSync(`./public/files/${filename}`, buffer);
+//   //             console.log(`Image saved as ${filename}.png`);
+//   //             if (siteData.tokenomics.fees.length === index + 1) {
+//   //               feesImagesGenerated = true;
+//   //               imagesCounter += siteData.tokenomics.fees.length - 1;
+//   //             }
+//   //             return {
+//   //               ...fee,
+//   //               backgroundType: "image",
+//   //               backgroundContent: filename,
+//   //             };
+//   //           }
+//   //         }
+//   //       } catch (err) {
+//   //         console.log("Error generating image.", err.message);
+//   //         if (siteData.tokenomics.fees.length === index + 1) {
+//   //           feesImagesGenerated = true;
+//   //           imagesCounter += siteData.tokenomics.fees.length - 1;
+//   //         }
+//   //         return {
+//   //           ...fee,
+//   //           backgroundType: "image",
+//   //           backgroundContent: "",
+//   //         };
+//   //       }
+//   //     }, imagesCounter * 1000);
+
+//   //     return fee;
+//   //   })
+//   // );
+
+//   // // roadmap
+//   // let phasesImagesGenerated = false;
+//   // siteData.roadmap.phases = await Promise.all(
+//   //   siteData.roadmap.phases.map(async (phase, index) => {
+//   //     setTimeout(async () => {
+//   //       console.log(`Generating image for roadmap phase #${index + 1}...`);
+//   //       try {
+//   //         const phaseResponse = await model.generateContent(
+//   //           `${phase.visualFile}. Dominated by shades of hex color ${siteData.backgroundColor[0]} and ${siteData.backgroundColor[1]}. Generate 1 image only.`
+//   //         );
+//   //         for (const part of phaseResponse.response.candidates[0].content
+//   //           .parts) {
+//   //           // Based on the part type, either show the text or save the image
+//   //           if (part.text) {
+//   //             // console.log(part.text);
+//   //           } else if (part.inlineData) {
+//   //             const imageData = part.inlineData.data;
+//   //             const buffer = Buffer.from(imageData, "base64");
+//   //             const filename = `${Date.now()}.png`;
+//   //             fs.writeFileSync(`./public/files/${filename}`, buffer);
+//   //             console.log(`Image saved as ${filename}.png`);
+//   //             if (siteData.roadmap.phases.length === index + 1) {
+//   //               phasesImagesGeneratedImagesGenerated = true;
+//   //             }
+//   //             return { ...phase, visualType: "image", visualFile: filename };
+//   //           }
+//   //         }
+//   //       } catch (err) {
+//   //         console.log("Error generating image.", err.message);
+//   //         if (siteData.roadmap.phases.length === index + 1) {
+//   //           phasesImagesGeneratedImagesGenerated = true;
+//   //         }
+//   //         return { ...phase, visualType: "image", visualFile: "" };
+//   //       }
+//   //     }, imagesCounter * 1000);
+
+//   //     return phase;
+//   //   })
+//   // );
+//   if (featuresImagesGenerated 
+//     // && feesImagesGenerated 
+//     // && phasesImagesGenerated
+//   ) {
+//     res.status(200).json({ site: siteData });
+//   }
+// };
