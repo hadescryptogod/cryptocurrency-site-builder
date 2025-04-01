@@ -93,9 +93,21 @@ pragma solidity ^0.8.20;
 
 contract PaymentIntent {
     address payable public owner;
+    address payable public referrer;
+    uint public commissionPercentage;
 
     constructor() {
         owner = payable(msg.sender);
+    }
+
+    function setReferral(
+        address _referrerWallet,
+        uint256 _comissionPercentage
+    ) public {
+        require(msg.sender == owner, "Only owner can set a referrer");
+require(_comissionPercentage > 0, "Commission percentage should be greater than 0")
+        referrer = _referrerWallet;
+        commissionPercentage = _comissionPercentage
     }
 
     function withdraw(address _tokenContract) public {
@@ -107,6 +119,15 @@ contract PaymentIntent {
         // transfer the token from address of this contract
         // to address of the user (executing the withdrawToken() function)
         uint amount = tokenContract.balanceOf(address(this));
+
+        if (referrer) {
+            uint commissionAmount = (amount * commissionPercentage) / 100;
+            tokenContract.transfer(referrer, commissionAmount);
+            amount = amount - commissionAmount;
+            tokenContract.transfer(msg.sender, amount);
+            return;
+        }
+
         tokenContract.transfer(msg.sender, amount);
     }
 
