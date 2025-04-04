@@ -98,11 +98,19 @@ exports.createSite = async (req, res, next) => {
     }
 
     // create site with req body payload
-    const site = await Site.create({
-      ...req.body,
-      paymentContractAddress: deployedContract.options.address,
-      referral: referral._id,
-    });
+
+    if (referral) {
+      const site = await Site.create({
+        ...req.body,
+        paymentContractAddress: deployedContract.options.address,
+        referral: referral._id,
+      });
+    } else {
+      const site = await Site.create({
+        ...req.body,
+        paymentContractAddress: deployedContract.options.address,
+      });
+    }
 
     // console.log(site);
 
