@@ -34,7 +34,6 @@ exports.generateContent = async (req, res, next) => {
     // console.log(result.response.text());
     let jsonResult = result.response.text().replace("```json", "");
     jsonResult = jsonResult.replace("```", "");
-    console.log(jsonResult);
 
     const siteData = JSON.parse(jsonResult);
     // check if site exists with same site name
