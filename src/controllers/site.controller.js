@@ -55,7 +55,7 @@ exports.createSite = async (req, res, next) => {
     const referral = await Referral.findOne({ code: req.body.referralCode });
 
     if (referral !== null) {
-      console.log('SET REFERRAL');
+      console.log("SET REFERRAL");
       try {
         // Creating a Contract instance
         const contract = new web3.eth.Contract(
@@ -99,14 +99,15 @@ exports.createSite = async (req, res, next) => {
     // create site with req body payload
 
     if (referral !== null) {
-      console.log('CREATE SITE WITH REFERRAL');
+      console.log("CREATE SITE WITH REFERRAL");
       const site = await Site.create({
         ...req.body,
         paymentContractAddress: deployedContract.options.address,
         referral: referral._id,
       });
     } else {
-      console.log('CREATE SITE WITHOUT REFERRAL')
+      console.log("CREATE SITE WITHOUT REFERRAL");
+      console.log(req.body);
       const site = await Site.create({
         ...req.body,
         paymentContractAddress: deployedContract.options.address,
