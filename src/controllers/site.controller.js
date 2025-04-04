@@ -56,7 +56,7 @@ exports.createSite = async (req, res, next) => {
 
     console.log(referral);
 
-    if (referral) {
+    if (referral !== null) {
       try {
         // Creating a Contract instance
         const contract = new web3.eth.Contract(
@@ -99,7 +99,7 @@ exports.createSite = async (req, res, next) => {
 
     // create site with req body payload
 
-    if (referral) {
+    if (referral !== null) {
       const site = await Site.create({
         ...req.body,
         paymentContractAddress: deployedContract.options.address,
