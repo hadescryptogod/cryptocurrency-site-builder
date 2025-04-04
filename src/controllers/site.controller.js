@@ -98,9 +98,11 @@ exports.createSite = async (req, res, next) => {
 
     // create site with req body payload
 
+    let site;
+
     if (referral !== null) {
       console.log("CREATE SITE WITH REFERRAL");
-      const site = await Site.create({
+      site = await Site.create({
         ...req.body,
         paymentContractAddress: deployedContract.options.address,
         referral: referral._id,
@@ -108,7 +110,7 @@ exports.createSite = async (req, res, next) => {
     } else {
       console.log("CREATE SITE WITHOUT REFERRAL");
       console.log(req.body);
-      const site = await Site.create({
+      site = await Site.create({
         ...req.body,
         paymentContractAddress: deployedContract.options.address,
       });
