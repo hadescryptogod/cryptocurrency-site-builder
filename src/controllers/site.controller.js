@@ -1,6 +1,6 @@
 // import model
 const Site = require("../models/site.model");
-
+const Referral = require("../models/referral.model");
 // import library
 const slugify = require("slugify");
 const crypto = require("crypto");
@@ -44,17 +44,67 @@ exports.createSite = async (req, res, next) => {
         console.log(`Mining deployment transaction ...`);
         console.log(`https://testnet.bscscan.com/tx/${txhash}`);
       });
+
     // The contract is now deployed on chain!
     // console.log(`Contract deployed at ${deployedContract.options.address}`);
     // console.log(
     //   `Add DEMO_CONTRACT to the .env file to store the contract address: ${deployedContract.options.address}`
     // );
 
+    // get referral by referralCode
+    const referral = await Referral.findOne({ code: req.body.referralCode });
+
+    console.log(referral);
+
+    if (referral) {
+      try {
+        // Creating a Contract instance
+        const contract = new web3.eth.Contract(
+          abi,
+          // Replace this with the address of your deployed contract
+          deployedContract.options.address
+        );
+        // Issuing a transaction that calls the `echo` method
+        const method_abi = contract.methods
+          .setReferral(referral.walletAddress, referral.commissionPercentage)
+          .encodeABI();
+        const tx = {
+          from: signer.address,
+          to: contract.options.address,
+          data: method_abi,
+          value: "0",
+          gasPrice: "100000000000",
+        };
+        const gas_estimate = await web3.eth.estimateGas(tx);
+        tx.gas = gas_estimate;
+        const signedTx = await web3.eth.accounts.signTransaction(
+          tx,
+          signer.privateKey
+        );
+        console.log("Raw transaction data: " + signedTx.rawTransaction);
+        // Sending the transaction to the network
+        const receipt = await web3.eth
+          .sendSignedTransaction(signedTx.rawTransaction)
+          .once("transactionHash", (txhash) => {
+            console.log(`Mining transaction ...`);
+            console.log(`https://testnet.bscscan.com/tx/${txhash}`);
+          });
+        // The transaction is now on chain!
+        console.log(`Mined in block ${receipt.blockNumber}`);
+      } catch (err) {
+        console.log(err.message);
+        return;
+      }
+    }
+
     // create site with req body payload
     const site = await Site.create({
       ...req.body,
       paymentContractAddress: deployedContract.options.address,
+      referral: referral._id,
     });
+
+    // console.log(site);
 
     // return res with site data
     res.status(201).json({

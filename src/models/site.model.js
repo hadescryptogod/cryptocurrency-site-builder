@@ -620,7 +620,6 @@ const siteSchema = new mongoose.Schema({
   },
   paid: {
     type: Boolean,
-    default: true,
   },
   paymentContractAddress: {
     type: String,
@@ -634,6 +633,7 @@ const siteSchema = new mongoose.Schema({
   token: {
     type: tokenSchema,
   },
+  referral: { type: mongoose.Schema.ObjectId, ref: "Referral" },
   header: {
     type: headerSchema,
   },

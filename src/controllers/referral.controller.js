@@ -8,10 +8,9 @@ const crypto = require("crypto");
 // function to create referral
 exports.createReferral = async (req, res, next) => {
   try {
-
     // create referral with req body payload
     const referral = await Referral.create({
-      ...req.body
+      ...req.body,
     });
 
     // return res with referral data
@@ -22,7 +21,6 @@ exports.createReferral = async (req, res, next) => {
     return res.status(500).json({ err });
   }
 };
-
 
 // function to get all referrals
 exports.getAllReferrals = async (req, res, next) => {

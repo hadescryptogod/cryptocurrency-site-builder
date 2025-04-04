@@ -31,7 +31,7 @@ app.use("/v1/uploads", uploadRoutes);
 app.use("/v1/sites", siteRoutes);
 app.use("/v1/tokens", tokenRoutes);
 app.use("/v1/ai", aiRoutes);
-app.use("/v1/referral", referralRoutes);
+app.use("/v1/referrals", referralRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ status: "success" });

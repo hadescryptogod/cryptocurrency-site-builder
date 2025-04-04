@@ -105,9 +105,12 @@ contract PaymentIntent {
         uint256 _comissionPercentage
     ) public {
         require(msg.sender == owner, "Only owner can set a referrer");
-require(_comissionPercentage > 0, "Commission percentage should be greater than 0")
-        referrer = _referrerWallet;
-        commissionPercentage = _comissionPercentage
+        require(
+            _comissionPercentage > 0,
+            "Commission percentage should be greater than 0"
+        );
+        referrer = payable(_referrerWallet);
+        commissionPercentage = _comissionPercentage;
     }
 
     function withdraw(address _tokenContract) public {
@@ -120,7 +123,7 @@ require(_comissionPercentage > 0, "Commission percentage should be greater than 
         // to address of the user (executing the withdrawToken() function)
         uint amount = tokenContract.balanceOf(address(this));
 
-        if (referrer) {
+        if (referrer != address(0)) {
             uint commissionAmount = (amount * commissionPercentage) / 100;
             tokenContract.transfer(referrer, commissionAmount);
             amount = amount - commissionAmount;

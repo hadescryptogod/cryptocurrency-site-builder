@@ -3,21 +3,21 @@ const mongoose = require("mongoose");
 // referral
 
 const referralSchema = new mongoose.Schema({
-  referrer: {
-    type: String,
-  },
-  referrerWalletAddress: {
+  walletAddress: {
     type: String,
     unique: true,
   },
-  referralCode: {
+  code: {
     type: String,
     unique: true,
   },
-  referralCount: {
+  commissionPercentage: {
     type: Number,
   },
-  referralCommissionsTotal: {
+  count: {
+    type: Number,
+  },
+  commissionsEarned: {
     type: Number,
   },
 });
