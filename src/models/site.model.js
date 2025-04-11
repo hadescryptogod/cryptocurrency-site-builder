@@ -294,7 +294,16 @@ const headerSchema = new mongoose.Schema({
   titleColor: {
     type: String,
   },
+  titleSize: {
+    type: String,
+  },
+  linkSizeDesktop: {
+    type: String,
+  },
   linkColorDesktop: {
+    type: String,
+  },
+  linkSizeMobile: {
     type: String,
   },
   linkColorMobile: {
@@ -316,17 +325,22 @@ const heroSchema = new mongoose.Schema({
   headline: {
     type: String,
   },
+  headlineSize: { type: String },
   headlineColor: {
     type: String,
   },
   shortDescription: {
     type: String,
   },
+  shortDescriptionSize: { type: String },
   shortDescriptionColor: {
     type: String,
   },
   links: {
     type: [linkSchema],
+  },
+  linksSize: {
+    type: String,
   },
   linksColor: {
     type: String,
@@ -381,7 +395,13 @@ const aboutSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  titleSize: {
+    type: String,
+  },
   titleColor: {
+    type: String,
+  },
+  descriptionSize: {
     type: String,
   },
   description: {
@@ -401,13 +421,22 @@ const aboutSchema = new mongoose.Schema({
   longDescription: {
     type: String,
   },
+  longDescriptionSize: {
+    type: String,
+  },
   longDescriptionColor: {
     type: String,
   },
   features: {
     type: [featureSchema],
   },
+  featuresTitleSize: {
+    type: String,
+  },
   featuresTitleColor: {
+    type: String,
+  },
+  featuresDescriptionSize: {
     type: String,
   },
   featuresDescriptionColor: {
@@ -451,12 +480,14 @@ const tokenomicsSchema = new mongoose.Schema({
   title: {
     type: String,
   },
+  titleSize: { type: String },
   titleColor: {
     type: String,
   },
   description: {
     type: String,
   },
+  descriptionSize: { type: String },
   descriptionColor: {
     type: String,
   },
@@ -622,6 +653,9 @@ const siteSchema = new mongoose.Schema({
     type: Boolean,
   },
   paymentContractAddress: {
+    type: String,
+  },
+  transactionHash: {
     type: String,
   },
   headingFont: {

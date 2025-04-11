@@ -303,17 +303,6 @@ exports.checkPayment = async (req, res, next) => {
   console.log(formattedResult);
   let paid = site.paid;
   if (Number(formattedResult) >= 0.1) {
-    // update site by slugf
-    const updatedSite = await Site.findOneAndUpdate(
-      { _id: site._id },
-      { paid: true },
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
-    paid = updatedSite.paid;
-
     // Creating a Contract instance
     const contract = new web3.eth.Contract(
       abi,
@@ -336,15 +325,29 @@ exports.checkPayment = async (req, res, next) => {
       signer.privateKey
     );
     console.log("Raw transaction data: " + signedTx.rawTransaction);
+    let _txHash;
     // Sending the transaction to the network
     const receipt = await web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
-      .once("transactionHash", (txhash) => {
+      .once("transactionHash", (txHash) => {
         console.log(`Mining transaction ...`);
-        console.log(`https://testnet.bscscan.com/tx/${txhash}`);
+        console.log(`https://testnet.bscscan.com/tx/${txHash}`);
+        _txHash = txHash;
       });
     // The transaction is now on chain!
     console.log(`Mined in block ${receipt.blockNumber}`);
+
+    // update site by id
+    const updatedSite = await Site.findOneAndUpdate(
+      { _id: site._id },
+      { paid: true, transactionHash: _txHash },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    paid = updatedSite.paid;
+    console.log(updatedSite.transactionHash);
   }
 
   res.status(200).json({ paid: paid, balance: formattedResult });
