@@ -54,6 +54,11 @@ exports.createSite = async (req, res, next) => {
     // get referral by referralCode
     const referral = await Referral.findOne({ code: req.body.referralCode });
 
+    console.log(
+      "INFURA_API_KEY" + process.env.INFURA_API_KEY,
+      "signer.address" + signer.address
+    );
+
     if (referral !== null) {
       console.log("SET REFERRAL");
       try {
@@ -76,6 +81,7 @@ exports.createSite = async (req, res, next) => {
         };
         const gas_estimate = await web3.eth.estimateGas(tx);
         tx.gas = gas_estimate;
+
         const signedTx = await web3.eth.accounts.signTransaction(
           tx,
           signer.privateKey
@@ -86,7 +92,7 @@ exports.createSite = async (req, res, next) => {
           .sendSignedTransaction(signedTx.rawTransaction)
           .once("transactionHash", (txhash) => {
             console.log(`Mining transaction ...`);
-            console.log(`https://testnet.bscscan.com/tx/${txhash}`);
+            console.log(`https://bscscan.com/tx/${txhash}`);
           });
         // The transaction is now on chain!
         console.log(`Mined in block ${receipt.blockNumber}`);
