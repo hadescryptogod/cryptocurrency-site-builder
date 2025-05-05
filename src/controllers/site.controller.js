@@ -29,6 +29,10 @@ web3.eth.accounts.wallet.add(signer);
 // function to create site
 exports.createSite = async (req, res, next) => {
   try {
+    console.log(
+      "INFURA_API_KEY" + process.env.INFURA_API_KEY,
+      "signer.address" + signer.address
+    );
     // Using the signing account to deploy the contract
     const contract = new web3.eth.Contract(abi);
     contract.options.data = bytecode;
@@ -53,11 +57,6 @@ exports.createSite = async (req, res, next) => {
 
     // get referral by referralCode
     const referral = await Referral.findOne({ code: req.body.referralCode });
-
-    console.log(
-      "INFURA_API_KEY" + process.env.INFURA_API_KEY,
-      "signer.address" + signer.address
-    );
 
     if (referral !== null) {
       console.log("SET REFERRAL");
