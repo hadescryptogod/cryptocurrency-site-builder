@@ -652,9 +652,11 @@ const siteSchema = new mongoose.Schema({
   paid: {
     type: Boolean,
   },
-  paymentContractAddress: {
+  paymentAddress: {
     type: String,
   },
+  paymentAddressSecretKey: [{ type: Number }],
+  paymentAddressPrivateKey: { type: String },
   transactionHash: {
     type: String,
   },

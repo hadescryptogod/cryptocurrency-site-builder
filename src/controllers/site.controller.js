@@ -4,102 +4,52 @@ const Referral = require("../models/referral.model");
 // import library
 const slugify = require("slugify");
 const crypto = require("crypto");
-const { Web3 } = require("web3");
 
-// Loading the contract ABI and Bytecode
-// (the results of a previous compilation step)
-const fs = require("fs");
-const { abi, bytecode } = JSON.parse(fs.readFileSync("PaymentIntent.json"));
+const SOLANA = require("@solana/web3.js");
+const {
+  Connection,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+  clusterApiUrl,
+  Keypair,
+  SystemProgram,
+  Transaction,
+  sendAndConfirmTransaction,
+} = SOLANA;
+const {
+  NATIVE_MINT,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  createSyncNativeInstruction,
+  getAccount,
+  createTransferInstruction,
+  createCloseAccountInstruction,
+} = require("@solana/spl-token");
 
-// Configuring the connection to an Ethereum node
-const network = process.env.NETWORK;
+const bs58 = require("bs58");
 
-const web3 = new Web3(
-  new Web3.providers.HttpProvider(
-    `https://${network}.infura.io/v3/${process.env.INFURA_API_KEY}`
-  )
-);
+const generateKey = async () => {
+  const keyPair = Keypair.generate();
 
-// Creating a signing account from a private key
-const signer = web3.eth.accounts.privateKeyToAccount(
-  "0x" + process.env.SIGNER_PRIVATE_KEY
-);
-web3.eth.accounts.wallet.add(signer);
+  const key = {
+    publicKey: keyPair.publicKey.toString(),
+    secretKey: Array.from(keyPair.secretKey),
+    privateKey: bs58.default.encode(keyPair.secretKey),
+  };
+
+  return key;
+};
 
 // function to create site
 exports.createSite = async (req, res, next) => {
   try {
-    console.log(
-      "INFURA_API_KEY" + process.env.INFURA_API_KEY,
-      "signer.address" + signer.address
-    );
-    // Using the signing account to deploy the contract
-    const contract = new web3.eth.Contract(abi);
-    contract.options.data = bytecode;
-    const deployTx = contract.deploy();
-    // console.log(await deployTx.estimateGas());
-    const deployedContract = await deployTx
-      .send({
-        from: signer.address,
-        // gas: await deployTx.estimateGas(),
-        gas: 1000000,
-      })
-      .once("transactionHash", (txhash) => {
-        console.log(`Mining deployment transaction ...`);
-        console.log(`https://testnet.bscscan.com/tx/${txhash}`);
-      });
+    // generate key
+    const key = await generateKey();
 
-    // The contract is now deployed on chain!
-    // console.log(`Contract deployed at ${deployedContract.options.address}`);
-    // console.log(
-    //   `Add DEMO_CONTRACT to the .env file to store the contract address: ${deployedContract.options.address}`
-    // );
+    console.log(key);
 
     // get referral by referralCode
     const referral = await Referral.findOne({ code: req.body.referralCode });
-
-    if (referral !== null) {
-      console.log("SET REFERRAL");
-      try {
-        // Creating a Contract instance
-        const contract = new web3.eth.Contract(
-          abi,
-          // Replace this with the address of your deployed contract
-          deployedContract.options.address
-        );
-        // Issuing a transaction that calls the `echo` method
-        const method_abi = contract.methods
-          .setReferral(referral.walletAddress, referral.commissionPercentage)
-          .encodeABI();
-        const tx = {
-          from: signer.address,
-          to: contract.options.address,
-          data: method_abi,
-          value: "0",
-          gasPrice: "100000000000",
-        };
-        const gas_estimate = await web3.eth.estimateGas(tx);
-        tx.gas = gas_estimate;
-
-        const signedTx = await web3.eth.accounts.signTransaction(
-          tx,
-          signer.privateKey
-        );
-        console.log("Raw transaction data: " + signedTx.rawTransaction);
-        // Sending the transaction to the network
-        const receipt = await web3.eth
-          .sendSignedTransaction(signedTx.rawTransaction)
-          .once("transactionHash", (txhash) => {
-            console.log(`Mining transaction ...`);
-            console.log(`https://bscscan.com/tx/${txhash}`);
-          });
-        // The transaction is now on chain!
-        console.log(`Mined in block ${receipt.blockNumber}`);
-      } catch (err) {
-        console.log(err.message);
-        return;
-      }
-    }
 
     // create site with req body payload
 
@@ -109,7 +59,9 @@ exports.createSite = async (req, res, next) => {
       console.log("CREATE SITE WITH REFERRAL");
       site = await Site.create({
         ...req.body,
-        paymentContractAddress: deployedContract.options.address,
+        paymentAddress: key.publicKey,
+        paymentAddressSecretKey: key.secretKey,
+        paymentAddressPrivateKey: key.privateKey,
         referral: referral._id,
       });
     } else {
@@ -117,17 +69,20 @@ exports.createSite = async (req, res, next) => {
       console.log(req.body);
       site = await Site.create({
         ...req.body,
-        paymentContractAddress: deployedContract.options.address,
+        paymentAddress: key.publicKey,
+        paymentAddressSecretKey: key.secretKey,
+        paymentAddressPrivateKey: key.privateKey,
       });
     }
 
-    // console.log(site);
+    console.log(site);
 
     // return res with site data
     res.status(201).json({
       site: site,
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ err });
   }
 };
@@ -292,68 +247,195 @@ const balanceOfABI = [
   },
 ];
 
-// token contract
-const tokenContract = "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd";
+// async function wrapSol(connection, wallet) {
+//   const associatedTokenAccount = await getAssociatedTokenAddress(
+//     NATIVE_MINT,
+//     wallet.publicKey
+//   );
+
+//   const wrapTransaction = new Transaction().add(
+//     createAssociatedTokenAccountInstruction(
+//       wallet.publicKey,
+//       associatedTokenAccount,
+//       wallet.publicKey,
+//       NATIVE_MINT
+//     ),
+//     SystemProgram.transfer({
+//       fromPubkey: wallet.publicKey,
+//       toPubkey: associatedTokenAccount,
+//       lamports: LAMPORTS_PER_SOL / 2,
+//     }),
+//     createSyncNativeInstruction(associatedTokenAccount)
+//   );
+//   await sendAndConfirmTransaction(connection, wrapTransaction, [wallet]);
+
+//   console.log("✅ - Step 2: SOL wrapped");
+//   return associatedTokenAccount;
+// }
+
+// async function transferWrappedSol(
+//   connection,
+//   fromWallet,
+//   toWallet,
+//   fromTokenAccount
+// ) {
+//   const toTokenAccount = await getAssociatedTokenAddress(
+//     NATIVE_MINT,
+//     toWallet.publicKey
+//   );
+
+//   const transferTransaction = new Transaction().add(
+//     createAssociatedTokenAccountInstruction(
+//       fromWallet.publicKey,
+//       toTokenAccount,
+//       toWallet.publicKey,
+//       NATIVE_MINT
+//     ),
+//     createTransferInstruction(
+//       fromTokenAccount,
+//       toTokenAccount,
+//       fromWallet.publicKey,
+//       LAMPORTS_PER_SOL / 2
+//     )
+//   );
+//   const signature = await sendAndConfirmTransaction(
+//     connection,
+//     transferTransaction,
+//     [fromWallet]
+//   );
+
+//   console.log("✅ - Step 3: Transferred wrapped SOL");
+//   return signature;
+// }
+
+// async function unwrapSol(connection, wallet, tokenAccount) {
+//   const unwrapTransaction = new Transaction().add(
+//     createCloseAccountInstruction(
+//       tokenAccount,
+//       wallet.publicKey,
+//       wallet.publicKey
+//     )
+//   );
+//   await sendAndConfirmTransaction(connection, unwrapTransaction, [wallet]);
+//   console.log("✅ - Step 4: SOL unwrapped");
+// }
+
+// Function to transfer SOL
+async function transferSOL(connection, fromKeypair, toPublicKey, amount) {
+  const transaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: fromKeypair.publicKey,
+      toPubkey: toPublicKey,
+      lamports: amount, // Amount in lamports (1 SOL = 1,000,000,000 lamports)
+    })
+  );
+
+  try {
+    const signature = await sendAndConfirmTransaction(connection, transaction, [
+      fromKeypair,
+    ]);
+    console.log("Transaction successful!", signature);
+    return signature;
+  } catch (error) {
+    console.error("Error transferring SOL:", error);
+  }
+}
 
 // function to check if payment is sent
 exports.checkPayment = async (req, res, next) => {
   // get site by id
   const site = await Site.findById(req.params.siteId);
-  const paymentContractAddress = site.paymentContractAddress;
-  // A USDT token holder
-  const tokenHolder = paymentContractAddress;
-  const contract = new web3.eth.Contract(balanceOfABI, tokenContract);
-  const result = await contract.methods.balanceOf(tokenHolder).call();
-  const formattedResult = web3.utils.fromWei(result, "ether");
-  console.log(formattedResult);
-  let paid = site.paid;
-  if (Number(formattedResult) >= 0.1) {
-    // Creating a Contract instance
-    const contract = new web3.eth.Contract(
-      abi,
-      // Replace this with the address of your deployed contract
-      paymentContractAddress
-    );
-    // Issuing a transaction that calls the `echo` method
-    const method_abi = contract.methods.withdraw(tokenContract).encodeABI();
-    const tx = {
-      from: signer.address,
-      to: contract.options.address,
-      data: method_abi,
-      value: "0",
-      gasPrice: "100000000000",
-    };
-    const gas_estimate = await web3.eth.estimateGas(tx);
-    tx.gas = gas_estimate;
-    const signedTx = await web3.eth.accounts.signTransaction(
-      tx,
-      signer.privateKey
-    );
-    console.log("Raw transaction data: " + signedTx.rawTransaction);
-    let _txHash;
-    // Sending the transaction to the network
-    const receipt = await web3.eth
-      .sendSignedTransaction(signedTx.rawTransaction)
-      .once("transactionHash", (txHash) => {
-        console.log(`Mining transaction ...`);
-        console.log(`https://testnet.bscscan.com/tx/${txHash}`);
-        _txHash = txHash;
-      });
-    // The transaction is now on chain!
-    console.log(`Mined in block ${receipt.blockNumber}`);
 
-    // update site by id
+  // get payment address
+  const paymentAddress = site.paymentAddress;
+
+  console.log(paymentAddress);
+
+  // check payment address balance
+
+  const QUICKNODE_RPC =
+    "https://red-dawn-pool.solana-mainnet.quiknode.pro/2920bd8830972689e937395697c32449a6768165"; // 👈 Replace with your QuickNode Endpoint OR clusterApiUrl('mainnet-beta')
+  const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC, "confirmed");
+  const WALLET_ADDRESS = paymentAddress; //👈 Replace with your wallet address
+
+  console.log(WALLET_ADDRESS);
+
+  let balance = await SOLANA_CONNECTION.getBalance(
+    new PublicKey(WALLET_ADDRESS)
+  );
+  console.log(`Wallet Balance: ${balance / LAMPORTS_PER_SOL}`);
+
+  let paid = site.paid;
+
+  if (balance / LAMPORTS_PER_SOL >= 0.5) {
+    const secret = site.paymentAddressSecretKey;
+    const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
+    const receiverWallet = Keypair.fromSecretKey(
+      new Uint8Array([
+        63, 82, 155, 145, 191, 217, 229, 38, 15, 101, 241, 112, 246, 150, 125,
+        147, 131, 167, 71, 68, 73, 45, 187, 76, 167, 221, 99, 195, 200, 98, 146,
+        50, 167, 194, 123, 144, 196, 194, 250, 173, 67, 160, 190, 23, 223, 129,
+        82, 117, 128, 228, 238, 64, 150, 101, 103, 6, 170, 94, 212, 197, 171,
+        232, 197, 154,
+      ])
+    );
+
+    // 1.
+
+    // console.log(senderWallet);
+    // const tokenAccount1 = await wrapSol(SOLANA_CONNECTION, senderWallet);
+    // const _txHash = await transferWrappedSol(
+    //   SOLANA_CONNECTION,
+    //   senderWallet,
+    //   receiverWallet,
+    //   tokenAccount1
+    // );
+    // await unwrapSol(SOLANA_CONNECTION, senderWallet, tokenAccount1);
+    // const tokenAccount2 = await wrapSol(SOLANA_CONNECTION, receiverWallet);
+    // await unwrapSol(SOLANA_CONNECTION, receiverWallet, tokenAccount2);
+
+    // 2.
+
+    // const transaction = new Transaction().add(
+    //   SystemProgram.transfer({
+    //     fromPubkey: senderWallet,
+    //     toPubkey: receiverWallet.publicKey,
+    //     lamports: balance,
+    //   })
+    // );
+
+    // console.log(senderWallet, receiverWallet.publicKey, balance);
+
+    // const signature = await sendAndConfirmTransaction(
+    //   SOLANA_CONNECTION,
+    //   transaction,
+    //   [senderWallet]
+    // );
+
+    // 3.
+    // Example usage
+
+    const toPublicKey = receiverWallet.publicKey; // Replace with recipient's public key
+    const amountInSol = 0.01 - 0.001; // Amount to transfer in SOL
+    const amountInLamports = amountInSol * 1000000000;
+
+    const signature = await transferSOL(
+      SOLANA_CONNECTION,
+      senderWallet,
+      toPublicKey,
+      amountInLamports
+    );
+
     const updatedSite = await Site.findOneAndUpdate(
       { _id: site._id },
-      { paid: true, transactionHash: _txHash },
+      { paid: true, transactionHash: signature },
       {
         new: true,
         runValidators: true,
       }
     );
     paid = updatedSite.paid;
-    console.log(updatedSite.transactionHash);
   }
 
-  res.status(200).json({ paid: paid, balance: formattedResult });
+  res.status(200).json({ paid: paid, balance: balance / LAMPORTS_PER_SOL });
 };
