@@ -367,7 +367,7 @@ exports.checkPayment = async (req, res, next) => {
 
   let paid = site.paid;
 
-  if (balance / LAMPORTS_PER_SOL >= 0.5) {
+  if (balance / LAMPORTS_PER_SOL >= 0.01) {
     const secret = site.paymentAddressSecretKey;
     const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
     const receiverWallet = Keypair.fromSecretKey(
