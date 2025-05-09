@@ -436,7 +436,7 @@ exports.checkPayment = async (req, res, next) => {
       // Send payment to main wallet
       const toPublicKey = receiverWallet.publicKey; // Replace with recipient's public key
       const amountInSol = 0.1 - commission - 0.00001; // Amount to transfer in SOL
-      const amountInLamports = amountInSol * 1000000000;
+      const amountInLamports = parseInt(amountInSol * 1000000000);
 
       const transactionHash = await transferSOL(
         SOLANA_CONNECTION,
