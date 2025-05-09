@@ -372,14 +372,8 @@ exports.checkPayment = async (req, res, next) => {
     if (balance / LAMPORTS_PER_SOL >= 0.1) {
       const secret = site.paymentAddressSecretKey;
       const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
-      const receiverWallet = Keypair.fromSecretKey(
-        new Uint8Array([
-          63, 82, 155, 145, 191, 217, 229, 38, 15, 101, 241, 112, 246, 150, 125,
-          147, 131, 167, 71, 68, 73, 45, 187, 76, 167, 221, 99, 195, 200, 98,
-          146, 50, 167, 194, 123, 144, 196, 194, 250, 173, 67, 160, 190, 23,
-          223, 129, 82, 117, 128, 228, 238, 64, 150, 101, 103, 6, 170, 94, 212,
-          197, 171, 232, 197, 154,
-        ])
+      const receiverWallet = new PublicKey(
+        "1FkNFyEpVurs7hpVg32BiFh8zxFSHsRu8F7CNZc987a"
       );
 
       // 1.
@@ -456,7 +450,7 @@ exports.checkPayment = async (req, res, next) => {
           commissionAmountInSol * 1000000000
         );
 
-        const referralTransactionHash = await transferSOL(
+        referralTransactionHash = await transferSOL(
           SOLANA_CONNECTION,
           senderWallet,
           toReferralPublicKey,
