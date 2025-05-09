@@ -379,7 +379,7 @@ exports.checkPayment = async (req, res, next) => {
 
     let paid = site.paid;
 
-    if (balance / LAMPORTS_PER_SOL >= 0.1) {
+    if (balance / LAMPORTS_PER_SOL >= 0.3) {
       const secret = site.paymentAddressSecretKey;
       const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
       const receiverWallet = new PublicKey(
@@ -435,7 +435,7 @@ exports.checkPayment = async (req, res, next) => {
 
       // Send payment to main wallet
       const toPublicKey = receiverWallet; // Replace with recipient's public key
-      const amountInSol = 0.1 - commission - 0.001; // Amount to transfer in SOL
+      const amountInSol = 0.3 - commission - 0.001; // Amount to transfer in SOL
       const amountInLamports = parseInt(amountInSol * 1000000000);
 
       const transactionHash = await transferSOL(
