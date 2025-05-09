@@ -664,7 +664,7 @@ const siteSchema = new mongoose.Schema({
   referralTransactionHash: {
     type: String,
   },
-  isDeleted: { type: Boolean, default: true },
+  isDeleted: { type: Boolean, default: false },
   headingFont: {
     type: String,
   },
