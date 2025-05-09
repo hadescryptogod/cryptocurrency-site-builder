@@ -417,7 +417,7 @@ exports.checkPayment = async (req, res, next) => {
       // 3.
       // Example usage
 
-      let commission;
+      let commission = 0;
       let referral;
 
       if (site.referral) {
@@ -443,23 +443,28 @@ exports.checkPayment = async (req, res, next) => {
 
       console.log(`${amountInSol} sent to ${toPublicKey}`);
 
-      // Send commission to referral
-      const toReferralPublicKey = new PublicKey(referral.walletAddress); // Replace with recipient's public key
-      const commissionAmountInSol =
-        balance / LAMPORTS_PER_SOL - amountInSol - 0.00001; // Amount to transfer in SOL
-      console.log(commissionAmountInSol);
-      const commissionAmountInLamports = parseInt(
-        commissionAmountInSol * 1000000000
-      );
+      let commissionAmountInSol = 0;
+      let referralTransactionHash;
 
-      const referralTransactionHash = await transferSOL(
-        SOLANA_CONNECTION,
-        senderWallet,
-        toReferralPublicKey,
-        commissionAmountInLamports
-      );
+      if (site.referral) {
+        // Send commission to referral
+        const toReferralPublicKey = new PublicKey(referral.walletAddress); // Replace with recipient's public key
+        const commissionAmountInSol =
+          balance / LAMPORTS_PER_SOL - amountInSol - 0.00001; // Amount to transfer in SOL
+        console.log(commissionAmountInSol);
+        const commissionAmountInLamports = parseInt(
+          commissionAmountInSol * 1000000000
+        );
 
-      console.log(`${commissionAmountInSol} sent to ${toReferralPublicKey}`);
+        const referralTransactionHash = await transferSOL(
+          SOLANA_CONNECTION,
+          senderWallet,
+          toReferralPublicKey,
+          commissionAmountInLamports
+        );
+
+        console.log(`${commissionAmountInSol} sent to ${toReferralPublicKey}`);
+      }
 
       let updatedSite;
 
