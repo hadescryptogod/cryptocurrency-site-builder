@@ -27,6 +27,7 @@ const {
 } = require("@solana/spl-token");
 
 const bs58 = require("bs58");
+const e = require("cors");
 
 const generateKey = async () => {
   const keyPair = Keypair.generate();
@@ -343,99 +344,171 @@ async function transferSOL(connection, fromKeypair, toPublicKey, amount) {
 
 // function to check if payment is sent
 exports.checkPayment = async (req, res, next) => {
-  // get site by id
-  const site = await Site.findById(req.params.siteId);
+  try {
+    // get site by id
+    const site = await Site.findById(req.params.siteId);
 
-  // get payment address
-  const paymentAddress = site.paymentAddress;
+    // get payment address
+    const paymentAddress = site.paymentAddress;
 
-  console.log(paymentAddress);
+    console.log(paymentAddress);
 
-  // check payment address balance
+    // check payment address balance
 
-  const QUICKNODE_RPC =
-    "https://red-dawn-pool.solana-mainnet.quiknode.pro/2920bd8830972689e937395697c32449a6768165"; // 👈 Replace with your QuickNode Endpoint OR clusterApiUrl('mainnet-beta')
-  const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC, "confirmed");
-  const WALLET_ADDRESS = paymentAddress; //👈 Replace with your wallet address
+    const QUICKNODE_RPC =
+      "https://red-dawn-pool.solana-mainnet.quiknode.pro/2920bd8830972689e937395697c32449a6768165"; // 👈 Replace with your QuickNode Endpoint OR clusterApiUrl('mainnet-beta')
+    const SOLANA_CONNECTION = new Connection(QUICKNODE_RPC, "confirmed");
+    const WALLET_ADDRESS = paymentAddress; //👈 Replace with your wallet address
 
-  console.log(WALLET_ADDRESS);
+    console.log(WALLET_ADDRESS);
 
-  let balance = await SOLANA_CONNECTION.getBalance(
-    new PublicKey(WALLET_ADDRESS)
-  );
-  console.log(`Wallet Balance: ${balance / LAMPORTS_PER_SOL}`);
-
-  let paid = site.paid;
-
-  if (balance / LAMPORTS_PER_SOL >= 0.01) {
-    const secret = site.paymentAddressSecretKey;
-    const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
-    const receiverWallet = Keypair.fromSecretKey(
-      new Uint8Array([
-        63, 82, 155, 145, 191, 217, 229, 38, 15, 101, 241, 112, 246, 150, 125,
-        147, 131, 167, 71, 68, 73, 45, 187, 76, 167, 221, 99, 195, 200, 98, 146,
-        50, 167, 194, 123, 144, 196, 194, 250, 173, 67, 160, 190, 23, 223, 129,
-        82, 117, 128, 228, 238, 64, 150, 101, 103, 6, 170, 94, 212, 197, 171,
-        232, 197, 154,
-      ])
+    let balance = await SOLANA_CONNECTION.getBalance(
+      new PublicKey(WALLET_ADDRESS)
     );
+    console.log(`Wallet Balance: ${balance / LAMPORTS_PER_SOL}`);
 
-    // 1.
+    let paid = site.paid;
 
-    // console.log(senderWallet);
-    // const tokenAccount1 = await wrapSol(SOLANA_CONNECTION, senderWallet);
-    // const _txHash = await transferWrappedSol(
-    //   SOLANA_CONNECTION,
-    //   senderWallet,
-    //   receiverWallet,
-    //   tokenAccount1
-    // );
-    // await unwrapSol(SOLANA_CONNECTION, senderWallet, tokenAccount1);
-    // const tokenAccount2 = await wrapSol(SOLANA_CONNECTION, receiverWallet);
-    // await unwrapSol(SOLANA_CONNECTION, receiverWallet, tokenAccount2);
+    if (balance / LAMPORTS_PER_SOL >= 0.1) {
+      const secret = site.paymentAddressSecretKey;
+      const senderWallet = Keypair.fromSecretKey(new Uint8Array(secret));
+      const receiverWallet = Keypair.fromSecretKey(
+        new Uint8Array([
+          63, 82, 155, 145, 191, 217, 229, 38, 15, 101, 241, 112, 246, 150, 125,
+          147, 131, 167, 71, 68, 73, 45, 187, 76, 167, 221, 99, 195, 200, 98,
+          146, 50, 167, 194, 123, 144, 196, 194, 250, 173, 67, 160, 190, 23,
+          223, 129, 82, 117, 128, 228, 238, 64, 150, 101, 103, 6, 170, 94, 212,
+          197, 171, 232, 197, 154,
+        ])
+      );
 
-    // 2.
+      // 1.
 
-    // const transaction = new Transaction().add(
-    //   SystemProgram.transfer({
-    //     fromPubkey: senderWallet,
-    //     toPubkey: receiverWallet.publicKey,
-    //     lamports: balance,
-    //   })
-    // );
+      // console.log(senderWallet);
+      // const tokenAccount1 = await wrapSol(SOLANA_CONNECTION, senderWallet);
+      // const _txHash = await transferWrappedSol(
+      //   SOLANA_CONNECTION,
+      //   senderWallet,
+      //   receiverWallet,
+      //   tokenAccount1
+      // );
+      // await unwrapSol(SOLANA_CONNECTION, senderWallet, tokenAccount1);
+      // const tokenAccount2 = await wrapSol(SOLANA_CONNECTION, receiverWallet);
+      // await unwrapSol(SOLANA_CONNECTION, receiverWallet, tokenAccount2);
 
-    // console.log(senderWallet, receiverWallet.publicKey, balance);
+      // 2.
 
-    // const signature = await sendAndConfirmTransaction(
-    //   SOLANA_CONNECTION,
-    //   transaction,
-    //   [senderWallet]
-    // );
+      // const transaction = new Transaction().add(
+      //   SystemProgram.transfer({
+      //     fromPubkey: senderWallet,
+      //     toPubkey: receiverWallet.publicKey,
+      //     lamports: balance,
+      //   })
+      // );
 
-    // 3.
-    // Example usage
+      // console.log(senderWallet, receiverWallet.publicKey, balance);
 
-    const toPublicKey = receiverWallet.publicKey; // Replace with recipient's public key
-    const amountInSol = 0.01 - 0.001; // Amount to transfer in SOL
-    const amountInLamports = amountInSol * 1000000000;
+      // const signature = await sendAndConfirmTransaction(
+      //   SOLANA_CONNECTION,
+      //   transaction,
+      //   [senderWallet]
+      // );
 
-    const signature = await transferSOL(
-      SOLANA_CONNECTION,
-      senderWallet,
-      toPublicKey,
-      amountInLamports
-    );
+      // 3.
+      // Example usage
 
-    const updatedSite = await Site.findOneAndUpdate(
-      { _id: site._id },
-      { paid: true, transactionHash: signature },
-      {
-        new: true,
-        runValidators: true,
+      let commission;
+      let referral;
+
+      if (site.referral) {
+        // get referral
+        referral = await Referral.findById(site.referral);
+
+        // Calculate commission
+        commission =
+          (balance / LAMPORTS_PER_SOL) * (referral.commissionPercentage / 100);
       }
-    );
-    paid = updatedSite.paid;
-  }
 
-  res.status(200).json({ paid: paid, balance: balance / LAMPORTS_PER_SOL });
+      // Send payment to main wallet
+      const toPublicKey = receiverWallet.publicKey; // Replace with recipient's public key
+      const amountInSol = 0.1 - commission - 0.00001; // Amount to transfer in SOL
+      const amountInLamports = amountInSol * 1000000000;
+
+      const transactionHash = await transferSOL(
+        SOLANA_CONNECTION,
+        senderWallet,
+        toPublicKey,
+        amountInLamports
+      );
+
+      console.log(`${amountInSol} sent to ${toPublicKey}`);
+
+      // Send commission to referral
+      const toReferralPublicKey = new PublicKey(referral.walletAddress); // Replace with recipient's public key
+      const commissionAmountInSol =
+        balance / LAMPORTS_PER_SOL - amountInSol - 0.00001; // Amount to transfer in SOL
+      console.log(commissionAmountInSol);
+      const commissionAmountInLamports = parseInt(
+        commissionAmountInSol * 1000000000
+      );
+
+      const referralTransactionHash = await transferSOL(
+        SOLANA_CONNECTION,
+        senderWallet,
+        toReferralPublicKey,
+        commissionAmountInLamports
+      );
+
+      console.log(`${commissionAmountInSol} sent to ${toReferralPublicKey}`);
+
+      let updatedSite;
+
+      if (site.referral) {
+        await Referral.findOneAndUpdate(
+          { _id: referral._id },
+          {
+            count: referral.count + 1,
+            commissionsEarned:
+              referral.commissionsEarned + commissionAmountInSol,
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+
+        updatedSite = await Site.findOneAndUpdate(
+          { _id: site._id },
+          {
+            paid: true,
+            transactionHash: transactionHash,
+            referralTransactionHash: referralTransactionHash,
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+      } else {
+        updatedSite = await Site.findOneAndUpdate(
+          { _id: site._id },
+          {
+            paid: true,
+            transactionHash: transactionHash,
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+      }
+
+      paid = updatedSite.paid;
+    }
+
+    res.status(200).json({ paid: paid, balance: balance / LAMPORTS_PER_SOL });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ err });
+  }
 };

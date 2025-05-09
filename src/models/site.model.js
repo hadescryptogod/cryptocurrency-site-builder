@@ -670,6 +670,9 @@ const siteSchema = new mongoose.Schema({
     type: tokenSchema,
   },
   referral: { type: mongoose.Schema.ObjectId, ref: "Referral" },
+  referralTransactionHash: {
+    type: String,
+  },
   header: {
     type: headerSchema,
   },
