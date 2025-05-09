@@ -435,7 +435,7 @@ exports.checkPayment = async (req, res, next) => {
 
       // Send payment to main wallet
       const toPublicKey = receiverWallet; // Replace with recipient's public key
-      const amountInSol = 0.1 - commission - 0.0001; // Amount to transfer in SOL
+      const amountInSol = 0.1 - commission - 0.001; // Amount to transfer in SOL
       const amountInLamports = parseInt(amountInSol * 1000000000);
 
       const transactionHash = await transferSOL(
@@ -454,7 +454,7 @@ exports.checkPayment = async (req, res, next) => {
         // Send commission to referral
         const toReferralPublicKey = new PublicKey(referral.walletAddress); // Replace with recipient's public key
         const commissionAmountInSol =
-          balance / LAMPORTS_PER_SOL - amountInSol - 0.0001; // Amount to transfer in SOL
+          balance / LAMPORTS_PER_SOL - amountInSol - 0.001; // Amount to transfer in SOL
         console.log(commissionAmountInSol);
         const commissionAmountInLamports = parseInt(
           commissionAmountInSol * 1000000000
