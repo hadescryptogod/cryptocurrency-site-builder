@@ -660,6 +660,11 @@ const siteSchema = new mongoose.Schema({
   transactionHash: {
     type: String,
   },
+  referral: { type: mongoose.Schema.ObjectId, ref: "Referral" },
+  referralTransactionHash: {
+    type: String,
+  },
+  isDeleted: { type: Boolean, default: true },
   headingFont: {
     type: String,
   },
@@ -669,10 +674,7 @@ const siteSchema = new mongoose.Schema({
   token: {
     type: tokenSchema,
   },
-  referral: { type: mongoose.Schema.ObjectId, ref: "Referral" },
-  referralTransactionHash: {
-    type: String,
-  },
+
   header: {
     type: headerSchema,
   },

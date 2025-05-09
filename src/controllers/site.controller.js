@@ -182,7 +182,17 @@ exports.deleteSiteBySlug = async (req, res, next) => {
 exports.deleteSiteById = async (req, res, next) => {
   try {
     // update site by id
-    const site = await Site.findByIdAndDelete(req.params.siteId);
+    // const site = await Site.findByIdAndDelete(req.params.siteId);
+
+    // update site by slug
+    const site = await Site.findOneAndUpdate(
+      { _id: req.params.siteId },
+      { isDeleted: true },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     // check if site exists
     if (!site) return res.status(404).json({ message: "Site not found." });
