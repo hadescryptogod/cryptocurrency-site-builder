@@ -16,6 +16,7 @@ const referralSchema = new mongoose.Schema({
   commissionPercentage: {
     type: Number,
     required: true,
+    default: 10,
   },
   count: {
     type: Number,
